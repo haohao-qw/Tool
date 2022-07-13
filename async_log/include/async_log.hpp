@@ -21,14 +21,18 @@ enum LOG_LEVEL{
 	TRACE
 };
 
+#define prog_name_len 128
+#define log_dir_path_size 128
+
 ///这里先只做单生产者
 class async_log{
 	private:
 		///文件名构造：时间_数值.log
 		int m_buf_count;   //缓冲区数量尽量多
+	        uint32_t m_buflen;///一块缓冲区的大小
 		Buffer* m_product;  ///生产节点
 
-		FILE* m_fp;//具体文件位置
+		FILE* m_fp;//具体文件位置 根据prog和dir确定
 		pid_t m_pid;//保存具体线程
 		
 		//日志内容相关
@@ -36,12 +40,10 @@ class async_log{
 		int m_log_cnt;///日志条数
 		
 		///设置输出地
-		char m_prog_name[512];//日志输出名称
-		char m_log_dir[512];//路径
+		char m_prog_name[prog_name_size];//日志输出名称
+		char m_log_dir[log_dir_path_size];//路径
 
-		bool m_env_ok;//路径是否正确
 		int m_level;//日志等级
-		uint64_t m_last_error_time;///TODO:日志存在error时最后的时间
 		
 		log_timer m_tm;///时间
 
@@ -50,15 +52,20 @@ class async_log{
 
 		static pthread_mutex_t m_mutex;//全局锁
 		static pthread_cond_t m_cond;///通知相关的
-		static uint32_t m_buflen;///一块缓冲区的大小
 		
 		static async_log* m_instance;///单例对象
 		static pthread_once_t m_once;///用于通知一次
 
 
+	private:
 		async_log();///单例下私有构造函数 不能构造栈上变量
 
-		bool decis_file(int year,int mon,int day);
+		buf_t readme(Buffer* node){
+			char* str=new char[4];
+			strncpy(str,node->data,4);
+			buf_t len=*(buf_t*)str;
+			return len;
+		}
 	public:
 		async_log(const async_log&)=delete;
 		async_log& operator=(const async_log&)=delete;
@@ -79,7 +86,7 @@ class async_log{
 		int get_level()const{return m_level;}
 
 		//进行持久化操作
-		void persist();
+		void consumer(Buffer* node);
 
 		void try_append(const char* lvl,const char* format,...);
 };

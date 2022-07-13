@@ -1,0 +1,3 @@
+/Code/c++/my_code_project/base_pro/tool/Tool/async_log/build/CMakeFiles/ex_buffer.dir
+/Code/c++/my_code_project/base_pro/tool/Tool/async_log/build/CMakeFiles/edit_cache.dir
+/Code/c++/my_code_project/base_pro/tool/Tool/async_log/build/CMakeFiles/rebuild_cache.dir

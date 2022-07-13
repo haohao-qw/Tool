@@ -6,7 +6,7 @@ int main(){
 	fp=fopen("log/test.txt","w");
 	fprintf(fp,"test is ok\n");
 	fputs("fputs is ok\n",fp);
-	Buffer buff(1000,"buffer");
+	Buffer buff(1000);
 	const char* src="buffer used is right....\n";
 	buff.append(src,50);
 	buff.try_write(fp);
