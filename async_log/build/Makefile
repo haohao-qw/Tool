@@ -117,6 +117,32 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named ASYNC_LOG
+
+# Build rule for target.
+ASYNC_LOG: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ASYNC_LOG
+.PHONY : ASYNC_LOG
+
+# fast build rule for target.
+ASYNC_LOG/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ASYNC_LOG.dir/build.make CMakeFiles/ASYNC_LOG.dir/build
+.PHONY : ASYNC_LOG/fast
+
+#=============================================================================
+# Target rules for targets named ex_time
+
+# Build rule for target.
+ex_time: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ex_time
+.PHONY : ex_time
+
+# fast build rule for target.
+ex_time/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_time.dir/build.make CMakeFiles/ex_time.dir/build
+.PHONY : ex_time/fast
+
+#=============================================================================
 # Target rules for targets named ex_buffer
 
 # Build rule for target.
@@ -128,6 +154,43 @@ ex_buffer: cmake_check_build_system
 ex_buffer/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_buffer.dir/build.make CMakeFiles/ex_buffer.dir/build
 .PHONY : ex_buffer/fast
+
+#=============================================================================
+# Target rules for targets named ex_log
+
+# Build rule for target.
+ex_log: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ex_log
+.PHONY : ex_log
+
+# fast build rule for target.
+ex_log/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_log.dir/build.make CMakeFiles/ex_log.dir/build
+.PHONY : ex_log/fast
+
+src/async_log.o: src/async_log.cc.o
+.PHONY : src/async_log.o
+
+# target to build an object file
+src/async_log.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ASYNC_LOG.dir/build.make CMakeFiles/ASYNC_LOG.dir/src/async_log.cc.o
+.PHONY : src/async_log.cc.o
+
+src/async_log.i: src/async_log.cc.i
+.PHONY : src/async_log.i
+
+# target to preprocess a source file
+src/async_log.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ASYNC_LOG.dir/build.make CMakeFiles/ASYNC_LOG.dir/src/async_log.cc.i
+.PHONY : src/async_log.cc.i
+
+src/async_log.s: src/async_log.cc.s
+.PHONY : src/async_log.s
+
+# target to generate assembly for a file
+src/async_log.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ASYNC_LOG.dir/build.make CMakeFiles/ASYNC_LOG.dir/src/async_log.cc.s
+.PHONY : src/async_log.cc.s
 
 tests/ex_buffer.o: tests/ex_buffer.cc.o
 .PHONY : tests/ex_buffer.o
@@ -153,6 +216,54 @@ tests/ex_buffer.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_buffer.dir/build.make CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.s
 .PHONY : tests/ex_buffer.cc.s
 
+tests/ex_log.o: tests/ex_log.cc.o
+.PHONY : tests/ex_log.o
+
+# target to build an object file
+tests/ex_log.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_log.dir/build.make CMakeFiles/ex_log.dir/tests/ex_log.cc.o
+.PHONY : tests/ex_log.cc.o
+
+tests/ex_log.i: tests/ex_log.cc.i
+.PHONY : tests/ex_log.i
+
+# target to preprocess a source file
+tests/ex_log.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_log.dir/build.make CMakeFiles/ex_log.dir/tests/ex_log.cc.i
+.PHONY : tests/ex_log.cc.i
+
+tests/ex_log.s: tests/ex_log.cc.s
+.PHONY : tests/ex_log.s
+
+# target to generate assembly for a file
+tests/ex_log.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_log.dir/build.make CMakeFiles/ex_log.dir/tests/ex_log.cc.s
+.PHONY : tests/ex_log.cc.s
+
+tests/ex_time.o: tests/ex_time.cc.o
+.PHONY : tests/ex_time.o
+
+# target to build an object file
+tests/ex_time.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_time.dir/build.make CMakeFiles/ex_time.dir/tests/ex_time.cc.o
+.PHONY : tests/ex_time.cc.o
+
+tests/ex_time.i: tests/ex_time.cc.i
+.PHONY : tests/ex_time.i
+
+# target to preprocess a source file
+tests/ex_time.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_time.dir/build.make CMakeFiles/ex_time.dir/tests/ex_time.cc.i
+.PHONY : tests/ex_time.cc.i
+
+tests/ex_time.s: tests/ex_time.cc.s
+.PHONY : tests/ex_time.s
+
+# target to generate assembly for a file
+tests/ex_time.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_time.dir/build.make CMakeFiles/ex_time.dir/tests/ex_time.cc.s
+.PHONY : tests/ex_time.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -161,10 +272,22 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... ASYNC_LOG"
 	@echo "... ex_buffer"
+	@echo "... ex_log"
+	@echo "... ex_time"
+	@echo "... src/async_log.o"
+	@echo "... src/async_log.i"
+	@echo "... src/async_log.s"
 	@echo "... tests/ex_buffer.o"
 	@echo "... tests/ex_buffer.i"
 	@echo "... tests/ex_buffer.s"
+	@echo "... tests/ex_log.o"
+	@echo "... tests/ex_log.i"
+	@echo "... tests/ex_log.s"
+	@echo "... tests/ex_time.o"
+	@echo "... tests/ex_time.i"
+	@echo "... tests/ex_time.s"
 .PHONY : help
 
 

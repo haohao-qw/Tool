@@ -6,31 +6,30 @@
 #include <stdio.h>
 #include <signal.h>
 
-static thread_pool_t *tpool = NULL;
+static thread_pool_t *threadpool = NULL;
 
 /* 工作者线程函数, 从任务链表中取出任务并执行 */
 static void* thread_routine(void *arg)
 {
     thread_node_t* work;
-
-    while(1) {
+    while(1){
         /* 如果任务队列为空,且线程池未关闭，线程阻塞等待任务 */
-        pthread_mutex_lock(&tpool->queue_lock);
+        pthread_mutex_lock(&threadpool->queue_lock);
 	///等待队列中有任务或者线程池关闭
-        while(!tpool->queue_head && !tpool->shutdown) {
-            pthread_cond_wait(&tpool->queue_ready, &tpool->queue_lock);
+        while(!threadpool->queue_head && !threadpool->shutdown) {
+            pthread_cond_wait(&threadpool->queue_ready, &threadpool->queue_lock);
         }
 
 		/*查看线程池开关，如果线程池关闭，线程退出*/
-        if (tpool->shutdown) {
-            pthread_mutex_unlock(&tpool->queue_lock);
+        if (threadpool->shutdown) {
+            pthread_mutex_unlock(&threadpool->queue_lock);
             pthread_exit(NULL);
         }
 
 		/*从任务链表中取出任务，执行任务*/
-        work = tpool->queue_head;
-        tpool->queue_head = tpool->queue_head->next;
-        pthread_mutex_unlock(&tpool->queue_lock);
+        work = threadpool->queue_head;
+        threadpool->queue_head = threadpool->queue_head->next;
+        pthread_mutex_unlock(&threadpool->queue_lock);
         work->routine(work->arg);///回调
 
 		/*线程完成任务后，释放任务*/
@@ -45,37 +44,37 @@ int thread_pool_create(int max_thr_num)
 {
     int i;
 	/*创建进程池结构体*/
-    tpool= (thread_pool_t*)calloc(1, sizeof(thread_pool_t));
-    if (!tpool) {
-        printf("%s: calloc tpool failed\n", __FUNCTION__);
+    threadpool= (thread_pool_t*)calloc(1, sizeof(thread_pool_t));
+    if (!threadpool) {
+        printf("%s: calloc threadpool failed\n", __FUNCTION__);
         exit(1);
     }
 
     /* 初始化任务链表、互斥量、条件变量 */
-    tpool->max_thr_num = max_thr_num;
-    tpool->shutdown = 0;
-    tpool->queue_head = NULL;
-    tpool->queue_tail = NULL;
-    if (pthread_mutex_init(&tpool->queue_lock, NULL) !=0) {
+    threadpool->max_thr_num = max_thr_num;
+    threadpool->shutdown = 0;
+    threadpool->queue_head = NULL;
+    threadpool->queue_tail = NULL;
+    if (pthread_mutex_init(&threadpool->queue_lock, NULL) !=0) {
         printf("%s: pthread_mutex_init failed, errno:%d, error:%s\n",
             __FUNCTION__, errno, strerror(errno));
         exit(-1);
     }
-    if (pthread_cond_init(&tpool->queue_ready, NULL) !=0 ) {
+    if (pthread_cond_init(&threadpool->queue_ready, NULL) !=0 ) {
         printf("%s: pthread_cond_init failed, errno:%d, error:%s\n",
             __FUNCTION__, errno, strerror(errno));
         exit(-1);
     }
 
     /* 创建worker线程 */
-    tpool->thr_id = (pthread_t*)calloc(max_thr_num, sizeof(pthread_t));
-    if (!tpool->thr_id) {
+    threadpool->thr_id = (pthread_t*)calloc(max_thr_num, sizeof(pthread_t));
+    if (!threadpool->thr_id) {
         printf("%s: calloc thr_id failed\n", __FUNCTION__);
         exit(1);
     }
     for (i = 0; i < max_thr_num; ++i) {
 	    ///绑定入口函数
-        if (pthread_create(&tpool->thr_id[i], NULL, thread_routine, NULL) != 0){
+        if (pthread_create(&threadpool->thr_id[i], NULL, thread_routine, NULL) != 0){
             printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__, errno, strerror(errno));
             exit(-1);
         }
@@ -89,39 +88,39 @@ void thread_pool_destroy()
     int i;
     thread_node_t *member;
 
-    if (tpool->shutdown) {
+    if (threadpool->shutdown) {
         return;
     }
 	/*关闭线程池开关*/
-    tpool->shutdown = 1;
+    threadpool->shutdown = 1;
 
     /* 唤醒所有阻塞的线程 */
-    pthread_mutex_lock(&tpool->queue_lock);
-    pthread_cond_broadcast(&tpool->queue_ready);
-    pthread_mutex_unlock(&tpool->queue_lock);
+    pthread_mutex_lock(&threadpool->queue_lock);
+    pthread_cond_broadcast(&threadpool->queue_ready);
+    pthread_mutex_unlock(&threadpool->queue_lock);
 
 	/*回收结束线程的剩余资源*/
-    for (i = 0; i < tpool->max_thr_num; ++i) {
-        pthread_join(tpool->thr_id[i], NULL);
+    for (i = 0; i < threadpool->max_thr_num; ++i) {
+        pthread_join(threadpool->thr_id[i], NULL);
     }
 
 	/*释放threadID数组*/
-    free(tpool->thr_id);
+    free(threadpool->thr_id);
 
 	/*释放未完成的任务*/
-    while(tpool->queue_head) {
-        member = tpool->queue_head;
-        tpool->queue_head = tpool->queue_head->next;
+    while(threadpool->queue_head) {
+        member = threadpool->queue_head;
+        threadpool->queue_head = threadpool->queue_head->next;
 	free(member->arg);
         free(member);
     }
 
 	/*销毁互斥量、条件变量*/
-    pthread_mutex_destroy(&tpool->queue_lock);
-    pthread_cond_destroy(&tpool->queue_ready);
+    pthread_mutex_destroy(&threadpool->queue_lock);
+    pthread_cond_destroy(&threadpool->queue_ready);
 
 	/*释放进程池结构体*/
-    free(tpool);
+    free(threadpool);
 }
 
 /* 向线程池添加任务 */
@@ -145,22 +144,22 @@ int thread_pool_add_work(void*(*routine)(void*), void *arg)
     work->next = NULL;
 
 	/*将任务结点添加到任务链表*/
-    pthread_mutex_lock(&tpool->queue_lock);
+    pthread_mutex_lock(&threadpool->queue_lock);
 	/*任务链表为空*/
-    if ( !tpool->queue_head ) {
+    if ( !threadpool->queue_head ) {
 //		printf("first work in work-queue\n");
-        tpool->queue_head = work;
-	tpool->queue_tail = work;
+        threadpool->queue_head = work;
+	threadpool->queue_tail = work;
     }
 	/*任务链表非空，查询任务链表末尾*/
 	else {
 //		printf("not first work in work-queue\n");
-		tpool->queue_tail->next=work;
-		tpool->queue_tail=work;
+		threadpool->queue_tail->next=work;
+		threadpool->queue_tail=work;
   }
     /* 通知工作者线程，有新任务添加 */
-    pthread_cond_signal(&tpool->queue_ready);
-    pthread_mutex_unlock(&tpool->queue_lock);
+    pthread_cond_signal(&threadpool->queue_ready);
+    pthread_mutex_unlock(&threadpool->queue_lock);
     return 0;
 }
 

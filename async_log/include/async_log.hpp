@@ -4,14 +4,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<string>
 #include<sys/types.h>
 #include<stdint.h>
 #include<pthread.h>
 #include<sys/syscall.h>
+#include<unordered_map>
 
 #include "timer.hpp"
 #include "buffer.hpp"
 
+using std::string;
 enum LOG_LEVEL{
 	FATAL=1,
 	ERROR,
@@ -27,6 +30,10 @@ enum LOG_LEVEL{
 ///这里先只做单生产者
 class async_log{
 	private:
+		std::unordered_map<string,int>hash;
+		string dirname;
+
+
 		///文件名构造：时间_数值.log
 		int m_buf_count;   //缓冲区数量尽量多
 	        uint32_t m_buflen;///一块缓冲区的大小
@@ -40,7 +47,7 @@ class async_log{
 		int m_log_cnt;///日志条数
 		
 		///设置输出地
-		char m_prog_name[prog_name_size];//日志输出名称
+		char m_prog_name[prog_name_len];//日志输出名称
 		char m_log_dir[log_dir_path_size];//路径
 
 		int m_level;//日志等级
@@ -52,7 +59,6 @@ class async_log{
 
 		static pthread_mutex_t m_mutex;//全局锁
 		static pthread_cond_t m_cond;///通知相关的
-		
 		static async_log* m_instance;///单例对象
 		static pthread_once_t m_once;///用于通知一次
 
@@ -60,12 +66,16 @@ class async_log{
 	private:
 		async_log();///单例下私有构造函数 不能构造栈上变量
 
-		buf_t readme(Buffer* node){
+		//读取节点状态 0：FULL 1:INIT 2:FREE
+		int readme(Buffer* node){
 			char* str=new char[4];
 			strncpy(str,node->data,4);
-			buf_t len=*(buf_t*)str;
-			return len;
+			buf_t ret=*(buf_t*)str;
+			if(ret==FULL)return 0;
+			else if(ret==INIT)return 1;
+			else return 2;
 		}
+
 	public:
 		async_log(const async_log&)=delete;
 		async_log& operator=(const async_log&)=delete;
@@ -81,14 +91,16 @@ class async_log{
 			while(!m_instance)m_instance=new async_log();
 		}
 
-		void init_path(const char* log_dir,const char* prog_name,int level);
+		void set_path(const char* log_dir,const char* prog_name,int level);
 
 		int get_level()const{return m_level;}
 
 		//进行持久化操作
-		void consumer(Buffer* node);
+		int consumer(Buffer* node);
 
-		void try_append(const char* lvl,const char* format,...);
+		void persistent();
+
+		int try_append(const char* lvl,const char* format,...);
 };
 
 void* be_thdo(void* args);
@@ -96,12 +108,12 @@ void* be_thdo(void* args);
 /***************************************工具宏********************************************/
 
 ///设置m_buflen
-#define LOG_MEM_SET(arg)\
+#define LOG_SET_BUFLEN(arg)\
 	do\
 	{\
-		if(arg<90*1024*1024)arg=90*1024*1024;\
-		else if(arg>1024*1024*1024)arg=1024*1024*1024;\
-		async_log::m_buflen=arg;\
+		if(arg<1*1024)arg=1*1024;\
+		else if(arg>1024*1024)arg=1024*1024;\
+		BUF_LEN=arg; 			    \
 	}while(0)
 
 ///format:[LEVEL][yy-mm-dd h:m:s[tid][file_name]:line (fun_name):content
@@ -109,34 +121,15 @@ void* be_thdo(void* args);
 #define LOG_INIT(log_dir,prog_name,level)\
 	do\
 	{\
-		async_log::getinstance()->init_path(log_dir,prog_name,level);\
+		async_log::getinstance()->set_path(log_dir,prog_name,level);\
 		pthread_t tid;\
 		pthread_create(&tid,NULL,be_thdo,NULL);\
 		pthread_detach(tid);\
 	}while(0)
 
-#define LOG_TRACE(fmt,args...)\
+#define LOG_FATAL(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[TRACE]","[%u]%s:%d(%s):" fmt "\n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
-
-#define LOG_INFO(fmt,args...)\
-	do{\
-		async_log::getinstance()->try_append("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
-
-#define LOG_NORMAL(fmt,args...)\
-	do{\
-		async_log::getinstance()->try_append("[NORMAL]","[%u]%s:%d(%s):" fmt "\n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
-
-
-#define LOG_WARN(fmt,args...)\
-	do{\
-		async_log::getinstance()->try_append("[WARN]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
@@ -146,85 +139,82 @@ void* be_thdo(void* args);
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
+#define LOG_WARN(fmt,args...)\
+	do{\
+		async_log::getinstance()->try_append("[WARN]","[%u]%s:%d(%s):" fmt "\n",\
+				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	}while(0)
+
+#define LOG_INFO(fmt,args...)\
+	do{\
+		async_log::getinstance()->try_append("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
+				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	}while(0)
+
 #define LOG_DEBUG(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[DEBUG]","[%u]%s:%d(%s):" fmt " \n",\
+		async_log::getinstance()->try_append("[DUBUG]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
-
-#define LOG_FATAL(fmt,args...)\
+#define LOG_TRACE(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s):" fmt " \n",\
+		async_log::getinstance()->try_append("[TRACE]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
 
-
-
-#define TRACE(fmt,args...)\
+#define FATAL(fmg,args...)\
 	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s):" fmt " \n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
+		if(async_log::getinstance()->get_level()>=FATAL)\
+		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s): " fmt "\n",\
+				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	}\
+		while(0)
 
-
-#define DEBUG(fmt,args...)\
+#define ERROR(fmg,args...)\
 	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[DEBUG]","[%u]%s:%d(%s):" fmt " \n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
+		if(async_log::getinstance()->get_level()>=ERROR)\
+		async_log::getinstance()->try_append("[ERROR]","[%u]%s:%d(%s): " fmt "\n",\
+				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	}\
+		while(0)
+
+#define WARN(fmg,args...)\
+do{\
+	if(async_log::getinstance()->get_level()>=WARN)\
+	async_log::getinstance()->try_append("[WARN]","[%u]%s:%d(%s): " fmt "\n",\
+			gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+}\
+	while(0)
+
+#define INFO(fmg,args...)\
+do{\
+	if(async_log::getinstance()->get_level()>=INFO)\
+	async_log::getinstance()->try_append("[INFO]","[%u]%s:%d(%s): " fmt "\n",\
+			gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+}\
+	while(0)
 
 
 
-#define INFO(fmt,args...)\
+
+#define DUBUG(fmg,args...)\
 	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[INFO]","[%u]%s:%d(%s):" fmt " \n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
+		if(async_log::getinstance()->get_level()>=DEBUG)\
+		async_log::getinstance()->try_append("[DEBUG]","[%u]%s:%d(%s): " fmt "\n",\
+				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	}\
+		while(0)
 
-
-#define NORMAL(fmt,args...)\
+#define TRACE(fmg,args...)\
 	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[NORMAL]","[%u]%s:%d(%s):" fmt " \n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
-
-
-
-
-#define WARN(fmt,args...)\
-	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[WARN]","[%u]%s:%d(%s):" fmt " \n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
-
-
-#define ERROR(fmt,args...)\
-	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[EROOR]","[%u]%s:%d(%s):" fmt " \n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
-
-
-
-#define FATAL(fmt,args...)\
-	do{\
-		if(async_log::getinstance()->get_levle()>=INFO)\
-		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s):"fmt "\n",\
-				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
-	}while(0)
+		if(async_log::getinstance()->get_level()>=TRACE)\
+		async_log::getinstance()->try_append("[TRACE]","[%u]%s:%d(%s): " fmt "\n",\
+				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	}\
+		while(0)
 
 
 #endif
-
-
-
-
 

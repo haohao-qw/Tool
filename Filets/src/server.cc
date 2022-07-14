@@ -82,6 +82,7 @@ void recv_fileinfo(int sockfd)
     printf("filename = %s\nfilesize = %d\ncount = %d\nbs = %d\n", finfo.file_name, finfo.file_size, finfo.chunk_num, finfo.chunk_size);
     printf("------------------------\n");
 
+    ///接收完文件头信息后立即mmap
     /*创建填充文件，map到虚存*/
     char filepath[100] = {0};
     strcpy(filepath, finfo.file_name);
@@ -102,6 +103,7 @@ void recv_fileinfo(int sockfd)
     pthread_mutex_lock(&conn_lock);
 
     printf("recv_fileinfo(): Lock conn_lock, enter gconn[]\n");
+    ///拿到维护的全局可用连接
     while( global_con[freeid].used ){
         ++freeid;
         freeid = freeid%CONN_MAX;

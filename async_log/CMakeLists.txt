@@ -19,17 +19,16 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 
 
-#set(LIB_SOUR
-#src/buffer.cc
-	#	src/async_log.cc
-	#       )
+set(LIB_SOUR
+		src/async_log.cc
+	       )
 
-	#add_library(ASYNC_LOG STATIC ${LIB_SOUR})
+add_library(ASYNC_LOG STATIC ${LIB_SOUR})
 	
-	#set(TAR_LIB
-	#ASYNC_LOG
-	#pthread
-	#)
+set(TAR_LIB
+	ASYNC_LOG
+	pthread
+)
 
 
 
@@ -39,15 +38,15 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #target_link_libraries(ex_test ${TAR_LIB})
 
 
-#add_executable(ex_time tests/ex_time.cc)
-#target_link_libraries(ex_time ${TAR_LIB})
+add_executable(ex_time tests/ex_time.cc)
+target_link_libraries(ex_time ${TAR_LIB})
 
 add_executable(ex_buffer tests/ex_buffer.cc)
 target_link_libraries(ex_buffer ${TAR_LIB})
 
 
-#add_executable(ex_log tests/ex_log.cc)
-#target_link_libraries(ex_log ${TAR_LIB})
+add_executable(ex_log tests/ex_log.cc)
+target_link_libraries(ex_log ${TAR_LIB})
 
 
 

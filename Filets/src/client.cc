@@ -15,6 +15,7 @@ int head_len = sizeof(struct filehead);
 int createfile(char *filename, int size)
 {
 	int fd = open(filename, O_RDWR | O_CREAT);
+	//fchmod更改文件权限
 	fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
 	lseek(fd, size-1, SEEK_SET);
 	write(fd, "", 1);

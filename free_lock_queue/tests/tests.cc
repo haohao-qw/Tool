@@ -29,9 +29,9 @@ class it:public ThreadPoolBase<int>{
 };
 
 int main(){
-	work pool(3);
+	work pool(4);
 	printf("start....\n");
-	for(int i=0;i<10000;i++){
+	for(int i=0;i<100000;i++){
 		pool.Push(std::bind(fun,i));
 	}
 	pool.Start();

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../lib/libNFT.a CMakeFiles/NFT.dir/src/server.cc.o CMakeFiles/NFT.dir/src/client.cc.o CMakeFiles/NFT.dir/src/Thread.cc.o
+/usr/bin/ranlib ../lib/libNFT.a

@@ -92,6 +92,7 @@ ex_buffer_EXTERNAL_OBJECTS =
 
 ../bin/ex_buffer: CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.o
 ../bin/ex_buffer: CMakeFiles/ex_buffer.dir/build.make
+../bin/ex_buffer: ../lib/libASYNC_LOG.a
 ../bin/ex_buffer: CMakeFiles/ex_buffer.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Code/c++/my_code_project/base_pro/tool/Tool/async_log/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ../bin/ex_buffer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ex_buffer.dir/link.txt --verbose=$(VERBOSE)
