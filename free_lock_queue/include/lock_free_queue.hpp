@@ -33,9 +33,9 @@ class CLockFreeQueue {
       LinkNode_t* node=m_head;
       while(m_head->next!=m_tail){
 	      node=m_head;
-	      node->next=nullptr;
 	      m_head=m_head->next;
 	      m_head->prev=nullptr;
+	      node->next=nullptr;
 	      delete node;
       }
       m_head->next=nullptr;
@@ -45,10 +45,7 @@ class CLockFreeQueue {
   }
  
   bool push(const T &val){
-      LinkNode_t * node = new LinkNode;
-      node->m_val = val;
-      node->next = nullptr;
-      node->prev=nullptr;
+      LinkNode_t * node = new LinkNode(val);
 
       do {
 	///插到队尾 原子操作
