@@ -37,7 +37,6 @@ async_log::async_log(): m_buf_count(5),
 			m_tm(){
 	m_product=new Buffer(m_buflen);
 	Buffer* node=m_product;
-	node=m_product;
 	for(int i=0;i<m_buf_count;i++){
 		Buffer* tmp=new Buffer(m_buflen);
 		node->next=tmp;
@@ -74,28 +73,22 @@ void async_log::set_path(const char* log_dir,const char* prog_name,int level){
 ///消费者做的事儿
 ///逻辑：将m_persist_buf中的内容写入到指定fp中
 int async_log::consumer(Buffer* node){
-		//逻辑：每个线程如果访问到节点为FREE 就开始持久化
-		pthread_mutex_lock(&m_mutex);
-		///持久化操作：读取节点
+		///持久化操作：读取节点 拿到文件信息后进行读写即可
 		struct HeadNode* head=(HeadNode*)malloc(headnode_size);
 		bzero(head,headnode_size);
 		memcpy(head,node->data,headnode_size);
-		FILE* fp=fopen(head->file_name,"w");///不存在就新创建一个
+		FILE* fp=fopen(head->file_name,"w");///不存在就新创建一个 TODO：问题：可否被多个线程打开
 		if(fp==NULL){
 			printf("fpoen %s error\n",head->file_name);
-			pthread_mutex_unlock(&m_mutex);
 			return 1;
 		}
 		int ret=fseek(fp,head->offset,SEEK_SET);
 		if(ret!=0){
 			printf("fseek error\n");
-			pthread_mutex_unlock(&m_mutex);
 			return 1;
 		}
 		node->try_write(fp);///开始写入数据
-		//fwrite(head->data+headnode_size,sizeof(head->data),1,fp);
 		fclose(fp);
-		pthread_mutex_unlock(&m_mutex);
 		return 0;
 }
 
@@ -110,18 +103,18 @@ void async_log::persistent(){
 		///可以进行持久化 TODO:把锁放到具体某个节点上
 		pthread_mutex_lock(&m_mutex);
 		ret=consumer(node);
-		if(!ret){
+		if(1==ret){
 			//TODO:错误处理
 			continue;
 		}
 		///持久化成功后 初始化节点
 		node->clear();
-		pthread_mutex_unlock(&m_mutex);
 	}
 }
 
 
 ///第一个字符为等级 后面根据设定更改输出
+//这里只完成了对product的写逻辑 TODO:再此基础上封装一下，当写满以及对于当前节点不为INI状态的逻辑
 int async_log::try_append(const char*lvl,const char* format,...){
 	int ms=0;
 	uint64_t cur_sec=m_tm.get_cur_time(&ms);///使用指针传出数据
