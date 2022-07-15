@@ -62,8 +62,8 @@ class ThreadPoolBase {
  private:
   void Worker(){
       unsigned int val_count = 0;
-      while (m_queue.getsize()>0) {
-          T val = m_queue.pop();///取出任务
+      while (1) {
+          T val = m_queue.pop();///取出任务  这里是阻塞的
           ///根据内容进行具体处理
           Handle(val);///任务处理函数 交给子类自定义进行实现 扩展性质
       }
