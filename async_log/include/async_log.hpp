@@ -15,6 +15,7 @@
 #include "buffer.hpp"
 
 using std::string;
+///致命 错误 警告 初始 调试 跟踪 根据不同的设定输出
 enum LOG_LEVEL{
 	FATAL=1,
 	ERROR,
@@ -44,7 +45,7 @@ class async_log{
 		
 		//日志内容相关
 		int m_year,m_mon,m_day;///日志时间
-		int m_log_cnt;///日志条数
+		int m_log_cnt;///日志条数 TODO
 		
 		///设置输出地
 		char m_prog_name[prog_name_len];//日志输出名称
@@ -100,7 +101,7 @@ class async_log{
 
 		void persistent();
 
-		int try_append(const char* lvl,const char* format,...);
+		int try_append(const char* lvl,const char* format,...);//外面逻辑由consumer进行
 };
 
 void* be_thdo(void* args);
