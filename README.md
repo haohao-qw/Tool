@@ -15,3 +15,11 @@ log：写：每次先访问head观察状态，可写才进行写操作，利用b
 问题：freelockqueue存在bug：1.大量任务环境以及多线程环境下会有segmention 2.死锁  segment在偶然情况下有 任务数量超过100000时大概率下死锁
 
 计划：明天完成所有功能测试并且改进逻辑 完成多线程下的读写测试
+
+715:
+完成：  
+修复freelockqueue死锁行为 大量任务偶然情况下仍然有segment，猜测：队列空情况时函数行为badalloc  
+完善log逻辑 仍然存在问题：可变参数部分参数未能正确写入，开头leek造成大量无效字符  
+
+计划：  
+完成log和freelockqueue的bug修复

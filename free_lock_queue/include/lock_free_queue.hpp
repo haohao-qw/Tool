@@ -45,7 +45,8 @@ class CLockFreeQueue {
   }
  
   bool push(const T &val){
-      LinkNode_t * node = new LinkNode(val);
+      LinkNode_t * node = new LinkNode;
+      node->m_val=val;
 
       do {
 	///插到队尾 原子操作

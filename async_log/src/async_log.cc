@@ -101,7 +101,6 @@ void async_log::persistent(){
 			continue;
 		}
 		///可以进行持久化 TODO:把锁放到具体某个节点上
-		pthread_mutex_lock(&m_mutex);
 		ret=consumer(node);
 		if(1==ret){
 			//TODO:错误处理
@@ -149,7 +148,32 @@ int async_log::try_append(const char*lvl,const char* format,...){
 	}
 }
 
-
+void async_log::Write(const char* lvl,const char* format,...){
+	va_list args;
+	va_start(args,format);
+	int ret=try_append(lvl,format,args);
+	va_end(args);
+	if(ret==-1){
+		Buffer* node=m_product->next;
+		while(node->next!=m_product){
+			if(readme(node)==1)break;
+			node=node->next;
+		}
+		if(node->next==m_product){
+			Buffer* nnode=new Buffer(m_buflen);
+			node->next=nnode;
+			nnode->prev=node;
+			nnode->next=m_product;
+			m_product->prev=nnode;
+			m_product=nnode;
+		}else m_product=node;
+		va_list args;
+		va_start(args,format);
+		int ret=try_append(lvl,format,args);
+		va_end(args);
+	}
+	return ;
+}
 
 ///每个线程不断循环
 void* be_thdo(void* args){

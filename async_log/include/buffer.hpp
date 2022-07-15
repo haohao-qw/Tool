@@ -101,7 +101,8 @@ class Buffer{
 
 		bool try_write(FILE* fp){
 			//将data中used_len长度的数据写入fp中
-			uint32_t try_len=fwrite(data,headnode_size,used_len,fp);
+		//	uint32_t try_len=fwrite(data,headnode_size,used_len,fp);
+			uint32_t try_len=fwrite(data,1,used_len,fp);
 			if(try_len!=used_len){
 				fprintf(stderr,"没有写入fp%u长度的数据",try_len);
 				return false;

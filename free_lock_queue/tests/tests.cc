@@ -36,16 +36,15 @@ int main(){
 	}
 	pool.Start();
 	pool.Stop();
-
 	/*
 	it pool(8);
 	printf("start...\n");
-	for(int i=0;i<50;i++){
+	for(int i=0;i<1000000;i++){
 		pool.Push(i);
 	}
 	pool.Start();
 	pool.Stop();
+	*/
 	return 0;
-        */
 }
 

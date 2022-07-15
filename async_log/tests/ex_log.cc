@@ -2,14 +2,16 @@
 #include<iostream>
 
 int main(){
+	
+	async_log::getinstance()->set_path("./log","test.txt",INFO);
+	
+	for(int i=0;i<1e5;i++)
+	async_log::getinstance()->Write("ERROR","nihao%s\n","fndos");
+	
+	async_log::getinstance()->persistent();
 
-	LOG_INIT("./log","ttt",INFO);
-	///大量日志才能打印
-	int i=1e5;
-	while(i--){
-		if(i==1234)printf("ok\n");
-		LOG_INFO("tfddddddddddddddddddddddddddddddddddddddddest....\n");
-	}
+	getchar();
+
 	return 0;
 }
 

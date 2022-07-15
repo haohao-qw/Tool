@@ -63,9 +63,13 @@ class async_log{
 		static async_log* m_instance;///单例对象
 		static pthread_once_t m_once;///用于通知一次
 
-
+		
 	private:
 		async_log();///单例下私有构造函数 不能构造栈上变量
+	public:
+		Buffer* getnode(){
+			return m_product;
+		}
 
 		//读取节点状态 0：FULL 1:INIT 2:FREE
 		int readme(Buffer* node){
@@ -99,7 +103,10 @@ class async_log{
 		//进行持久化操作
 		int consumer(Buffer* node);
 
+		void Write(const char* lvl,const char* format,...);
+
 		void persistent();
+
 
 		int try_append(const char* lvl,const char* format,...);//外面逻辑由consumer进行
 };
@@ -130,37 +137,37 @@ void* be_thdo(void* args);
 
 #define LOG_FATAL(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[FATAL]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
 #define LOG_ERROR(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[ERROR]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[ERROR]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
 #define LOG_WARN(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[WARN]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[WARN]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
 #define LOG_INFO(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
 #define LOG_DEBUG(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[DUBUG]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[DUBUG]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
 #define LOG_TRACE(fmt,args...)\
 	do{\
-		async_log::getinstance()->try_append("[TRACE]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[TRACE]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
@@ -168,32 +175,32 @@ void* be_thdo(void* args);
 #define FATAL(fmg,args...)\
 	do{\
 		if(async_log::getinstance()->get_level()>=FATAL)\
-		async_log::getinstance()->try_append("[FATAL]","[%u]%s:%d(%s): " fmt "\n",\
-				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+		async_log::getinstance()->Write("[FATAL]","[%u]%s:%d(%s): " fmt "\n",\
+				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}\
 		while(0)
 
 #define ERROR(fmg,args...)\
 	do{\
 		if(async_log::getinstance()->get_level()>=ERROR)\
-		async_log::getinstance()->try_append("[ERROR]","[%u]%s:%d(%s): " fmt "\n",\
-				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+		async_log::getinstance()->Write("[ERROR]","[%u]%s:%d(%s): " fmt "\n",\
+				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}\
 		while(0)
 
 #define WARN(fmg,args...)\
 do{\
 	if(async_log::getinstance()->get_level()>=WARN)\
-	async_log::getinstance()->try_append("[WARN]","[%u]%s:%d(%s): " fmt "\n",\
-			gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	async_log::getinstance()->Write("[WARN]","[%u]%s:%d(%s): " fmt "\n",\
+			getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 }\
 	while(0)
 
 #define INFO(fmg,args...)\
 do{\
 	if(async_log::getinstance()->get_level()>=INFO)\
-	async_log::getinstance()->try_append("[INFO]","[%u]%s:%d(%s): " fmt "\n",\
-			gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+	async_log::getinstance()->Write("[INFO]","[%u]%s:%d(%s): " ,"\n",\
+			getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 }\
 	while(0)
 
@@ -203,16 +210,16 @@ do{\
 #define DUBUG(fmg,args...)\
 	do{\
 		if(async_log::getinstance()->get_level()>=DEBUG)\
-		async_log::getinstance()->try_append("[DEBUG]","[%u]%s:%d(%s): " fmt "\n",\
-				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+		async_log::getinstance()->Write("[DEBUG]","[%u]%s:%d(%s): " fmt "\n",\
+				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}\
 		while(0)
 
 #define TRACE(fmg,args...)\
 	do{\
 		if(async_log::getinstance()->get_level()>=TRACE)\
-		async_log::getinstance()->try_append("[TRACE]","[%u]%s:%d(%s): " fmt "\n",\
-				gettid(),__FILE__,__LINE__,__FUNCTION__,##args);\
+		async_log::getinstance()->Write("[TRACE]","[%u]%s:%d(%s): " fmt "\n",\
+				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}\
 		while(0)
 
