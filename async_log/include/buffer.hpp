@@ -10,8 +10,8 @@ const int FILE_DIR=128;
 
 enum BUFFER_STATUS{
 	INIT=1,
-	FREE,
-	FULL
+	FREE=2,
+	FULL=3
 };///分别代表未写  在写未满 未写已满
 
 using buf_t=BUFFER_STATUS;
@@ -36,8 +36,6 @@ class Buffer{
 		uint32_t used_len;
 		
 		char* data;///实际空间：使用char*进行存储 存储的是字符
-
-
 	public:
 		///不可复制
 		Buffer(const Buffer&)=delete;
@@ -55,7 +53,8 @@ class Buffer{
 				fprintf(stderr,"缓冲区分配失败!\n");
 				exit(1);
 			}
-			used_len=headnode_size;
+			///问题：struct头部长度是否是固定的
+			/* 应该由log进行初始化
 			struct HeadNode* headnode=(HeadNode*)malloc(headnode_size);
 			bzero(headnode,headnode_size);
 			headnode->status=INIT;///未初始化
@@ -63,13 +62,17 @@ class Buffer{
 			headnode->size=0;
 			strcpy(headnode->file_name,"");///开始赋值为空 后面交给生产者进行赋值
 			memcpy(data,headnode,headnode_size);///赋值给节点
-
+            */
 		}
 
 		uint32_t available_len()const{
 			return total_len-used_len;
 		}
 
+
+		int getUsedlen()const{
+			return used_len;
+		}
 
 		char* getdata()const{
 			return data+headnode_size;
@@ -81,33 +84,64 @@ class Buffer{
 
 		bool append(const char* append_log,uint32_t len){
 			if(available_len()<len){
+			    printf("节点可用空间不足 退出\n");
 				return false;///没有分配成功返回false
 			}
 			memcpy(data+used_len,append_log,len);///追加len长度的日志
 			used_len+=len;
+			printf("节点追加到缓冲区成功，使用长度为%d\n",used_len);
 			return true;
 		}
 
 		void clear(){
 			used_len=headnode_size;
+			setINIT();	
+		}
+
+		void setINIT(){
 			struct HeadNode* headnode=(HeadNode*)malloc(headnode_size);
 			bzero(headnode,headnode_size);
 			headnode->status=INIT;
 			headnode->offset=0;
 			headnode->size=0;
 			strcpy(headnode->file_name,"");
+			strcpy(headnode->file_dir,"");
 			memcpy(data,headnode,headnode_size);///赋值给节点
 		}
 
-		bool try_write(FILE* fp){
+		void setFREE(){
+			struct HeadNode* headnode=(HeadNode*)malloc(headnode_size);
+			bzero(headnode,headnode_size);
+			headnode->status=FREE;
+			headnode->offset=0;
+			headnode->size=0;
+			strcpy(headnode->file_name,"");
+			strcpy(headnode->file_dir,"");
+			memcpy(data,headnode,headnode_size);///赋值给节点
+		}
+
+		void setFULL(int offset,int size,char* dir, char* name ){
+			struct HeadNode* headnode=(HeadNode*)malloc(headnode_size);
+			bzero(headnode,headnode_size);
+			headnode->status=FULL;
+			headnode->offset=offset;
+			headnode->size=size;
+			strcpy(headnode->file_name,name);
+			strcpy(headnode->file_dir,dir);
+			memcpy(data,headnode,headnode_size);///赋值给节点
+		}
+
+		int try_write(FILE* fp){///需要外部进行fp偏移的设定 同时fp由外部进行关闭
 			//将data中used_len长度的数据写入fp中
 		//	uint32_t try_len=fwrite(data,headnode_size,used_len,fp);
-			uint32_t try_len=fwrite(data,1,used_len,fp);
-			if(try_len!=used_len){
+			//int ret=fseek(fp,used_len,SEEK_SET);
+			uint32_t try_len=fwrite(data+headnode_size,1,used_len-headnode_size,fp);
+			printf("节点写入文件流大小:%d",try_len);
+			if(try_len!=used_len-headnode_size){
 				fprintf(stderr,"没有写入fp%u长度的数据",try_len);
-				return false;
+				return -1;
 			}
-			return true;
+			return try_len;
 		}
 
 };

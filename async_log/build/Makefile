@@ -130,6 +130,19 @@ ASYNC_LOG/fast:
 .PHONY : ASYNC_LOG/fast
 
 #=============================================================================
+# Target rules for targets named ex_buffer
+
+# Build rule for target.
+ex_buffer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ex_buffer
+.PHONY : ex_buffer
+
+# fast build rule for target.
+ex_buffer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_buffer.dir/build.make CMakeFiles/ex_buffer.dir/build
+.PHONY : ex_buffer/fast
+
+#=============================================================================
 # Target rules for targets named ex_log
 
 # Build rule for target.
@@ -166,6 +179,30 @@ src/async_log.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ASYNC_LOG.dir/build.make CMakeFiles/ASYNC_LOG.dir/src/async_log.cc.s
 .PHONY : src/async_log.cc.s
 
+tests/ex_buffer.o: tests/ex_buffer.cc.o
+.PHONY : tests/ex_buffer.o
+
+# target to build an object file
+tests/ex_buffer.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_buffer.dir/build.make CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.o
+.PHONY : tests/ex_buffer.cc.o
+
+tests/ex_buffer.i: tests/ex_buffer.cc.i
+.PHONY : tests/ex_buffer.i
+
+# target to preprocess a source file
+tests/ex_buffer.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_buffer.dir/build.make CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.i
+.PHONY : tests/ex_buffer.cc.i
+
+tests/ex_buffer.s: tests/ex_buffer.cc.s
+.PHONY : tests/ex_buffer.s
+
+# target to generate assembly for a file
+tests/ex_buffer.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex_buffer.dir/build.make CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.s
+.PHONY : tests/ex_buffer.cc.s
+
 tests/ex_log.o: tests/ex_log.cc.o
 .PHONY : tests/ex_log.o
 
@@ -199,10 +236,14 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ASYNC_LOG"
+	@echo "... ex_buffer"
 	@echo "... ex_log"
 	@echo "... src/async_log.o"
 	@echo "... src/async_log.i"
 	@echo "... src/async_log.s"
+	@echo "... tests/ex_buffer.o"
+	@echo "... tests/ex_buffer.i"
+	@echo "... tests/ex_buffer.s"
 	@echo "... tests/ex_log.o"
 	@echo "... tests/ex_log.i"
 	@echo "... tests/ex_log.s"

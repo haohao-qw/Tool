@@ -41,8 +41,8 @@ set(TAR_LIB
 #add_executable(ex_time tests/ex_time.cc)
 #target_link_libraries(ex_time ${TAR_LIB})
 
-#add_executable(ex_buffer tests/ex_buffer.cc)
-#target_link_libraries(ex_buffer ${TAR_LIB})
+add_executable(ex_buffer tests/ex_buffer.cc)
+target_link_libraries(ex_buffer ${TAR_LIB})
 
 
 add_executable(ex_log tests/ex_log.cc)

@@ -10,6 +10,7 @@
 #include<pthread.h>
 #include<sys/syscall.h>
 #include<unordered_map>
+#include <stdarg.h>
 
 #include "timer.hpp"
 #include "buffer.hpp"
@@ -32,15 +33,16 @@ enum LOG_LEVEL{
 class async_log{
 	private:
 		std::unordered_map<string,int>hash;
+        std::unordered_map<string,FILE*>File;
 		string dirname;
 
+		int m_first_offet;
 
 		///文件名构造：时间_数值.log
 		int m_buf_count;   //缓冲区数量尽量多
-	        uint32_t m_buflen;///一块缓冲区的大小
+		uint32_t m_buflen;///一块缓冲区的大小
 		Buffer* m_product;  ///生产节点
 
-		FILE* m_fp;//具体文件位置 根据prog和dir确定
 		pid_t m_pid;//保存具体线程
 		
 		//日志内容相关
@@ -76,16 +78,24 @@ class async_log{
 			char* str=new char[4];
 			strncpy(str,node->data,4);
 			buf_t ret=*(buf_t*)str;
-			if(ret==FULL)return 0;
-			else if(ret==INIT)return 1;
-			else return 2;
+			if(ret==FULL)return 3;
+			else if(ret==FREE)return 2;
+			else return 1;
 		}
 
 	public:
 		async_log(const async_log&)=delete;
 		async_log& operator=(const async_log&)=delete;
-
+        ~async_log(){
+            File.clear();
+            hash.clear();
+        }
 	public:
+
+        int getcount()const{
+            return m_buf_count;
+        }
+
 		static async_log* getinstance(){
 			///等待初始化条件满足
 			pthread_once(&m_once,async_log::init);
@@ -108,7 +118,7 @@ class async_log{
 		void persistent();
 
 
-		int try_append(const char* lvl,const char* format,...);//外面逻辑由consumer进行
+		int try_append(const char* lvl,const char* format,va_list args);//外面逻辑由consumer进行
 };
 
 void* be_thdo(void* args);

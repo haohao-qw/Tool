@@ -44,5 +44,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/ASYNC_LOG.dir/DependInfo.cmake"
+  "CMakeFiles/ex_buffer.dir/DependInfo.cmake"
   "CMakeFiles/ex_log.dir/DependInfo.cmake"
   )
