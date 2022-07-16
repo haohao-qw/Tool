@@ -4,6 +4,8 @@
 #include<stdio.h>
 #include<cstdint>
 #include<cstring>
+#include<pthread.h>
+#include<errno.h>
 
 const int FILE_NAME=128;
 const int FILE_DIR=128;
@@ -36,7 +38,12 @@ class Buffer{
 		uint32_t used_len;
 		
 		char* data;///实际空间：使用char*进行存储 存储的是字符
-	public:
+
+        pthread_mutex_t m_mutex;//全局锁
+       // pthread_cond_t m_cond;///通知相关的
+        // pthread_once_t m_once;///用于通知一次
+
+public:
 		///不可复制
 		Buffer(const Buffer&)=delete;
 		Buffer& operator=(const Buffer&)=delete;
@@ -47,6 +54,8 @@ class Buffer{
 			next(NULL),
 			total_len(len),
 			used_len(headnode_size){
+
+            m_mutex=PTHREAD_MUTEX_INITIALIZER;
 			if(total_len<headnode_size)total_len=headnode_size;
 			data=new char[len];///headnode数据由生产者进行初始化
 			if(!data){
@@ -63,6 +72,22 @@ class Buffer{
 			strcpy(headnode->file_name,"");///开始赋值为空 后面交给生产者进行赋值
 			memcpy(data,headnode,headnode_size);///赋值给节点
             */
+		}
+
+		~Buffer(){
+            pthread_mutex_destroy(&m_mutex);
+            delete[] data;
+            data= nullptr;///再次访问时可以显式的以空指针挂掉
+		}
+
+		bool try_lock(){
+		    int err= pthread_mutex_trylock(&m_mutex);
+		    if(EBUSY==err)return false;
+		    return true;
+		}
+
+		void unlock(){
+            pthread_mutex_unlock(&m_mutex);
 		}
 
 		uint32_t available_len()const{

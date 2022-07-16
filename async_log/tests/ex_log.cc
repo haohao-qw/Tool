@@ -2,19 +2,15 @@
 #include<iostream>
 
 int main(){
-	
-	async_log::getinstance()->set_path("./log","log.txt",INFO);
+    ///大量日志可以设置较大buffer空间 减少锁的调用
+    LOG_INIT("./log","log",INFO);
+    for(int i=0;i<100000;i++) {
+        LOG_INFO("test is ok %s%d", "nihao", 100);
+        LOG_DEBUG("buffer %s%d%f\n","test...",123,12.33);
+    }
+    getchar();
+    printf("成功\n");
 
-	for(int i=0;i<100;i++)
-	async_log::getinstance()->Write("ERROR","nihao%d%s%d%s\n",111,"nofds",124,"fnsdojfosjf");
-
-	printf("节点个数%d\n",async_log::getinstance()->getcount());
-	printf("%d\n",async_log::getinstance()->readme(async_log::getinstance()->getnode()));
-	
-	async_log::getinstance()->persistent();
-
-	//getchar();
 
 	return 0;
 }
-

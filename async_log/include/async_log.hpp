@@ -139,15 +139,17 @@ void* be_thdo(void* args);
 #define LOG_INIT(log_dir,prog_name,level)\
 	do\
 	{\
-		async_log::getinstance()->set_path(log_dir,prog_name,level);\
-		pthread_t tid;\
-		pthread_create(&tid,NULL,be_thdo,NULL);\
-		pthread_detach(tid);\
+		async_log::getinstance()->set_path(log_dir,prog_name,level); \
+        for(int i=0;i<4;i++){                                 \
+		    pthread_t tid=i;\
+	    	pthread_create(&tid,NULL,be_thdo,NULL);\
+		    pthread_detach(tid);                   \
+		}\
 	}while(0)
 
 #define LOG_FATAL(fmt,args...)\
 	do{\
-		async_log::getinstance()->Write("[FATAL]","[%u]%s:%d(%s):" fmt "\n",\
+		async_log::getinstance()->Write("[FATAL]","[%u]%s:%d(%s):" fmt ,\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 

@@ -68,8 +68,48 @@ CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.o: ../tests/ex_buffer.cc \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
   /usr/local/gcc-11.2.0/include/c++/11.2.0/cstring \
   /usr/include/string.h \
-  /usr/include/strings.h
+  /usr/include/strings.h \
+  /usr/include/pthread.h \
+  /usr/include/sched.h \
+  /usr/include/x86_64-linux-gnu/bits/sched.h \
+  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
+  /usr/include/time.h \
+  /usr/include/x86_64-linux-gnu/bits/time.h \
+  /usr/include/x86_64-linux-gnu/bits/timex.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
+  /usr/include/errno.h \
+  /usr/include/x86_64-linux-gnu/bits/errno.h \
+  /usr/include/linux/errno.h \
+  /usr/include/x86_64-linux-gnu/asm/errno.h \
+  /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/errno-base.h
 
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
+/usr/include/errno.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/include/time.h:
+
+/usr/include/x86_64-linux-gnu/bits/cpu-set.h:
+
+/usr/include/x86_64-linux-gnu/bits/sched.h:
+
+/usr/include/sched.h:
 
 /usr/include/strings.h:
 
@@ -88,6 +128,8 @@ CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.o: ../tests/ex_buffer.cc \
 /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
+
+/usr/include/pthread.h:
 
 /usr/local/gcc-11.2.0/include/c++/11.2.0/bits/std_abs.h:
 
@@ -119,6 +161,8 @@ CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.o: ../tests/ex_buffer.cc \
 
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
+/usr/include/x86_64-linux-gnu/bits/timex.h:
+
 /usr/local/gcc-11.2.0/include/c++/11.2.0/x86_64-pc-linux-gnu/bits/c++config.h:
 
 ../tests/ex_buffer.cc:
@@ -133,11 +177,15 @@ CMakeFiles/ex_buffer.dir/tests/ex_buffer.cc.o: ../tests/ex_buffer.cc \
 
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
+/usr/include/x86_64-linux-gnu/asm/errno.h:
+
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/sysmacros.h:
 
 /usr/include/features.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
 

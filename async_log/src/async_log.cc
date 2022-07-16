@@ -14,15 +14,15 @@ const int LOG_USE=1024;
 
 const int MEM_USE=1024;
 
-int BUF_LEN=1024;
+int BUF_LEN=2*1024*1024;
 
 static pid_t Getpid(){
 	return syscall(SYS_gettid);
-}
+};
 
 ////初始化静态成员变量，静态成员初始化优先类构造 因此要先进行初始化
-pthread_mutex_t async_log::m_mutex=PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t async_log::m_cond=PTHREAD_COND_INITIALIZER;
+//pthread_mutex_t async_log::m_mutex=PTHREAD_MUTEX_INITIALIZER;
+//pthread_cond_t async_log::m_cond=PTHREAD_COND_INITIALIZER;
 pthread_once_t async_log::m_once=PTHREAD_ONCE_INIT;
 
 async_log* async_log::m_instance=nullptr;
@@ -38,6 +38,7 @@ async_log::async_log():
 			m_tm(){
 	m_product=new Buffer(m_buflen);
 	m_product->setFREE();
+	m_product->try_lock();///第一个一定能上锁
 	Buffer* node=m_product;
 	for(int i=0;i<m_buf_count;i++){
 		Buffer* tmp=new Buffer(m_buflen);
@@ -58,10 +59,13 @@ void async_log::set_path(const char* log_dir,const char* prog_name,int level){
 	string key_name=m_prog_name;
 	string key=key_dir+"/"+key_name;
 	dirname=key;
+    printf("dirname%s\n",dirname.c_str());
+    hash[key]=0;///一开始偏移长度为0
+
     printf("文件名:%s\n",dirname.c_str());
     File[dirname]=fopen(dirname.c_str(),"w");///不存在就新创建一个 TODO：问题：可否被多个线程打开
+
     fseek(File[dirname],0,SEEK_SET);
-	hash[key]=0;///一开始偏移长度为0
 	mkdir(m_log_dir,0777);///创建目录
 
 	if(access(m_log_dir,F_OK|W_OK)==-1){//检查是否具有文件的读取权限
@@ -75,6 +79,10 @@ void async_log::set_path(const char* log_dir,const char* prog_name,int level){
 		level=FATAL;
 	}
 	m_level=level;
+    if(hash.count(key)){
+        printf("%s已经创建\n",dirname.c_str());
+        return;
+    }
 }
 
 ///消费者做的事儿
@@ -86,6 +94,7 @@ int async_log::consumer(Buffer* node){
 		memcpy(head,node->data,headnode_size);
 		printf("文件内容:%s %s %d %d\n",head->file_name,head->file_dir,head->status,head->offset);
 		FILE* fp=File[dirname];
+
         printf("消费者逻辑:拿到 dirname:%s\n",dirname.c_str());
 		if(fp==NULL){
 			printf("fpoen %s error\n",head->file_name);
@@ -97,6 +106,7 @@ int async_log::consumer(Buffer* node){
 		    return -1;
 		}
 		int flag=node->try_write(fp);///开始写入数据
+		node->unlock();///写完就释放无论写成功与否
 		if(flag==-1){
             printf("文件try_write失败\n");
             return -1;
@@ -117,9 +127,8 @@ void async_log::persistent(){
 	while(1){
 		int ret=readme(node);
         printf("节点状态：1:INIT 2:FREE 3:FULL :%d\n",ret);
-        sleep(1);
         if(ret==1||ret==2){
-		    ///1:INIT 2:FREE
+		    ///1:INIT 2:FREE 3:FULL
 			node=node->next;
 			continue;
 		}
@@ -162,6 +171,7 @@ int async_log::try_append(const char*lvl,const char* format,va_list args){
 		///长度不够返回0 返回前对于数据头进行格式化
 		if(m_product->used_len-headnode_size==hash[dirname])m_first_offet=hash[dirname];
 		m_product->setFULL(hash[dirname],m_product->getUsedlen(),m_log_dir,m_prog_name);
+		m_product->unlock();///释放锁
 		///TODO:进行通知
 		return -1;
 	}
@@ -178,9 +188,10 @@ void async_log::Write(const char* lvl,const char* format,...){
 		Buffer* node=m_product->next;
 		while(node->next!=m_product){
 			///找到一个INIT节点
-			if(readme(node)==1)break;///1:INIT 2:FREE 3:FULL
+			if(readme(node)==1&&node->try_lock())break;///1:INIT 2:FREE 3:FULL 应该先readme
 			node=node->next;
 		}
+
 		if(node->next==m_product){
 			Buffer* nnode=new Buffer(m_buflen);
 			m_buf_count++;//追加新的节点
@@ -191,6 +202,7 @@ void async_log::Write(const char* lvl,const char* format,...){
 			m_product=nnode;
 		}else m_product=node;
 		m_product->setFREE();
+		m_product->try_lock();///进行锁 这个能够上锁的
 		va_list args;
 		va_start(args,format);
 		int ret=try_append(lvl,format,args);
