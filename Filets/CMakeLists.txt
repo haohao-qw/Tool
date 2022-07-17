@@ -21,7 +21,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 set(LIB_SOUR
 	src/server.cc
-	src/client.cc
+#	src/client.cc
 	src/Thread.cc
         )
 
@@ -38,8 +38,8 @@ set(TAR_LIB
 #add_executable(ReadBuffer tests/ReadBufferTest.cc)
 #target_link_libraries(ReadBuffer ${TAR_LIB})
 
-add_executable(Client tests/Client.cc)
-target_link_libraries(Client ${TAR_LIB})
+#add_executable(Client tests/Client.cc)
+#target_link_libraries(Client ${TAR_LIB})
 
 add_executable(Server tests/Server.cc)
 target_link_libraries(Server ${TAR_LIB})

@@ -9,14 +9,15 @@
 static thread_pool_t *threadpool = NULL;
 
 /* 工作者线程函数, 从任务链表中取出任务并执行 */
-static void* thread_routine(void *arg)
+static void* thread_routine(void *arg)///arg有啥用
 {
     thread_node_t* work;
     while(1){
         /* 如果任务队列为空,且线程池未关闭，线程阻塞等待任务 */
         pthread_mutex_lock(&threadpool->queue_lock);
 	///等待队列中有任务或者线程池关闭
-        while(!threadpool->queue_head && !threadpool->shutdown) {
+        //while(!threadpool->queue_head && !threadpool->shutdown) {
+        while(!threadpool->queue_head || !threadpool->shutdown) {//TODO:条件
             pthread_cond_wait(&threadpool->queue_ready, &threadpool->queue_lock);
         }
 
@@ -33,7 +34,7 @@ static void* thread_routine(void *arg)
         work->routine(work->arg);///回调
 
 		/*线程完成任务后，释放任务*/
-	free(work->arg);
+	    free(work->arg);
         free(work);
     }
     return NULL; 
@@ -96,7 +97,7 @@ void thread_pool_destroy()
 
     /* 唤醒所有阻塞的线程 */
     pthread_mutex_lock(&threadpool->queue_lock);
-    pthread_cond_broadcast(&threadpool->queue_ready);
+    pthread_cond_broadcast(&threadpool->queue_ready);//和routineue中线程联系 直接退出线程
     pthread_mutex_unlock(&threadpool->queue_lock);
 
 	/*回收结束线程的剩余资源*/
@@ -111,7 +112,8 @@ void thread_pool_destroy()
     while(threadpool->queue_head) {
         member = threadpool->queue_head;
         threadpool->queue_head = threadpool->queue_head->next;
-	free(member->arg);
+        ///考虑执行完成
+	    free(member->arg);
         free(member);
     }
 

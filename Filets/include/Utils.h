@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
+
 #include<pthread.h>
+#include<sys/socket.h>
 //---------------client
 #define SERVER_IP   "127.0.0.1"     //server IP
 
@@ -79,12 +81,13 @@ const int RECVBUF_SIZE128=1<<17;//128k
 #define RECVBUF_SIZE    65536       //64K
 
 
+
 /*文件信息*/
 struct fileinfo{
-    char file_name[FILENAME_MAXLEN];     //文件名
     int file_size;                       //文件大小
     int chunk_num;                       //分块数量 决定发送次数
     int chunk_size;                      //标准分块大小 一个分块大小
+    char file_name[FILENAME_MAXLEN];     //文件名
 };
 ///chunk_num*chunk_size+?=file_size
 
@@ -110,34 +113,7 @@ struct keep_con{
     char file_name[FILENAME_MAXLEN];   //文件名
 };
 
-
-/*线程参数*/
-struct args{
-    int sockfd;
-    void (*recv_finfo)(int fd);
-    void (*recv_fdata)(int fd);
-};
-
-/**线程相关**/
-
-/* 任务结点 */
-typedef struct thread_node {
-    void* (*routine)(void*);       /* 任务函数 todo:c++11写法*/
-    void* arg;                    /* 传入任务函数的参数 */
-    struct thread_node   *next;
-}thread_node_t;
-
-
-/*线程池*/
-typedef struct thread_pool{
-    int shutdown;                    /* 线程池是否销毁 */
-    int  max_thr_num;                 /* 最大线程数 */
-    pthread_t  *thr_id;                   /* 线程ID数组首地址 */
-    thread_node_t    *queue_head;         /* 任务链表队首 */
-    thread_node_t    *queue_tail; 	 /* 任务链表队尾 */
-    pthread_mutex_t queue_lock;
-    pthread_cond_t  queue_ready;
-}thread_pool_t;
-
-
+int fileinfo_len = sizeof(struct fileinfo);
+int head_len = sizeof(struct filehead);
+int conn_len = sizeof(struct keep_con);
 #endif

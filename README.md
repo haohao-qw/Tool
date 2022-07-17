@@ -28,9 +28,16 @@ log：写：每次先访问head观察状态，可写才进行写操作，利用b
 计划：  
 完成log和freelockqueue的bug修复
   
-  716：  
-  完成：  
-  log的工具宏封装，解决seek时大量NULL的bug，测试所有接口，目前由于采用加锁的方式 IO性能极低；完善了freelockqueue的bug定位：对于队列为空情况仍然可能发生pop行为即使采用了cas方式   
+716：  
+完成：  
+log的工具宏封装，解决seek时大量NULL的bug，测试所有接口，目前由于采用加锁的方式 IO性能极低；完善了freelockqueue的bug定位：对于队列为空情况仍然可能发生pop行为即使采用了cas方式   
     
-    计划：  
-    改进log加锁解决同步问题的方式，改进接口命名；解决freelockqueue的badalloc的bug。
+ 计划：  
+ 改进log加锁解决同步问题的方式，改进接口命名；解决freelockqueue的badalloc的bug。
+
+  
+717:  
+完成：  
+Filets的封装测试  
+计划：存在重定义BUG，优雅方式去完成，封装线程池，提供有锁无锁线程池实现任务的切分  
+

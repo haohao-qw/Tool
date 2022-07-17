@@ -1,2 +1,0 @@
-未定义的引用：
-mbegin在client中确定  在clien中定义 生成server无法获取
