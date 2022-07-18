@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="NFT"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\async_log\;CMake Files\free_lock_queue\;CMake Files\Filets\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Client">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/Client" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 Client"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Client/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/Client" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 Client/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Server">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/Server" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 Server"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Server/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/Server" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 Server/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pool_test">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/pool_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 pool_test"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pool_test/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/pool_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 pool_test/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="main">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/main" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 main"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="main/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/main" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 main/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="log_buffer">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/log_buffer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 log_buffer"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="log_buffer/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/log_buffer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 log_buffer/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="log">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/log" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 log"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="log/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/log" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 log/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="log_time">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/log_time" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 log_time"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="log_time/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/bin/log_time" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 log_time/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="async_log">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/lib/libasync_log.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/./include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 async_log"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="async_log/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/lib/libasync_log.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/./include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 async_log/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/async_log/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="free_lock_queue">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/lib/libfree_lock_queue.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/./include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 free_lock_queue"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="free_lock_queue/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/lib/libfree_lock_queue.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/./include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 free_lock_queue/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/free_lock_queue/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="filets">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/lib/libfilets.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/./include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 filets"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="filets/fast">
+				<Option output="/Code/c++/my_code_project/base_pro/tool/NFT/lib/libfilets.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/include"/>
+					<Add directory="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/./include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/include"/>
+					<Add directory="/usr/local/gcc-11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 filets/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug/Filets/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/src/Thread.cc">
+			<Option target="filets"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/src/client.cc">
+			<Option target="filets"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/src/server.cc">
+			<Option target="filets"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/src/async_log.cc">
+			<Option target="async_log"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/example/Client.cc">
+			<Option target="Client"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/example/Server.cc">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/example/log.cc">
+			<Option target="log"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/example/log_buffer.cc">
+			<Option target="log_buffer"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/example/log_time.cc">
+			<Option target="log_time"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/example/pool_test.cc">
+			<Option target="pool_test"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/src/lock_free_queue.cc">
+			<Option target="free_lock_queue"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/src/threadpool.cc">
+			<Option target="free_lock_queue"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/main.cpp">
+			<Option target="main"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/async_log/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\async_log\"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/free_lock_queue/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\free_lock_queue\"/>
+		</Unit>
+		<Unit filename="/Code/c++/my_code_project/base_pro/tool/NFT/Filets/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Filets\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

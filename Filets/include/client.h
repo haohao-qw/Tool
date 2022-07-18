@@ -20,7 +20,6 @@
 #include <sys/mman.h>
 #include <time.h>
 
-
 struct HeadArg{
     struct  filehead* head;
     int sockfd;

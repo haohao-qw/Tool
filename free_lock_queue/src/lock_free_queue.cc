@@ -1,5 +1,6 @@
 #include "lock_free_queue.hpp"
 
+/*
 template<typename T>
 LckFreeQueue<T>::LckFreeQueue(): m_head(nullptr), m_tail(nullptr), m_empty(true), m_length(0) {
   m_head = new LinkNode;
@@ -50,3 +51,4 @@ template<typename T>
 bool LckFreeQueue<T>::empty() {
   return m_empty;
 }
+*/

@@ -1,7 +1,5 @@
 #include "threadpool.hpp"
-#include <sstream>
-#include <unistd.h>
- 
+ /*
 template<typename T>
 WorkThreadPool<T>::WorkThreadPool(int size) {
   if (size <= 0) { // 最小也需要有1个线程
@@ -29,7 +27,7 @@ void WorkThreadPool<T>::Worker() {
     T val = m_queue.pop();///取出任务
 
     ///TODO:改下任务处理逻辑
-    /*
+    *//*
     if (val.empty()) {
       printf("no val got, sleep for 0.1 sec\n");
       usleep(100); // 0.1 sec
@@ -42,7 +40,7 @@ void WorkThreadPool<T>::Worker() {
       printf("%s\n", ss.str().c_str());
       return;
     }
-*/
+*//*
 
     ///根据内容进行具体处理
     Handle(val);
@@ -72,3 +70,4 @@ int WorkThreadPool<T>::Stop() {
   }
   return 0;
 }
+*/

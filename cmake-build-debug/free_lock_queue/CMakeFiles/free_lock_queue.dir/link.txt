@@ -1,0 +1,1 @@
+g++ -fPIC -std=c++20 -g -lpthread -march=native -O0  -O0 -Wall -g -ggdb -shared -Wl,-soname,libfree_lock_queue.so -o ../../lib/libfree_lock_queue.so CMakeFiles/free_lock_queue.dir/src/lock_free_queue.cc.o CMakeFiles/free_lock_queue.dir/src/threadpool.cc.o 

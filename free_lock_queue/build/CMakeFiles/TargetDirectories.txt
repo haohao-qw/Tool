@@ -1,3 +1,0 @@
-/Code/c++/my_code_project/base_pro/tool/Tool/free_lock_queue/build/CMakeFiles/ex_test.dir
-/Code/c++/my_code_project/base_pro/tool/Tool/free_lock_queue/build/CMakeFiles/edit_cache.dir
-/Code/c++/my_code_project/base_pro/tool/Tool/free_lock_queue/build/CMakeFiles/rebuild_cache.dir

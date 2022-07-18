@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/libASYNC_LOG.a CMakeFiles/ASYNC_LOG.dir/src/async_log.cc.o
-/usr/bin/ranlib ../lib/libASYNC_LOG.a

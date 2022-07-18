@@ -1,4 +1,0 @@
-/Code/c++/my_code_project/base_pro/tool/Tool/Filets/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Code/c++/my_code_project/base_pro/tool/Tool/Filets/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Code/c++/my_code_project/base_pro/tool/Tool/Filets/cmake-build-debug/CMakeFiles/Server.dir
-/Code/c++/my_code_project/base_pro/tool/Tool/Filets/cmake-build-debug/CMakeFiles/NFT.dir

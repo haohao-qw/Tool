@@ -1,6 +1,6 @@
 #ifndef __LCKFREE_H__
 #define __LCKFREE_H__
-
+#include<atomic>
 using namespace std;
  
 template<typename T>

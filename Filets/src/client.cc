@@ -44,7 +44,6 @@ void Client::Transform(int last_bs){///由上面接收
     int j=0, num=m_info.chunk_num, offset=0;
     pthread_t pid[num];
     memset(pid, 0, num*sizeof(pthread_t));
-    int head_len = sizeof(struct filehead);
 
     struct HeadArg* args=(HeadArg*)malloc(sizeof(HeadArg));
     /*文件可以被标准分块*/
@@ -231,6 +230,7 @@ void Client::Client_init(char *ip)
     server_addr.sin_addr.s_addr = inet_addr(ip);
 
     //连接服务器
+    socklen_t sockaddr_len=sizeof(sockaddr_in);
     if (connect(m_sockfd, (struct sockaddr *)&server_addr, sockaddr_len) < 0)
     {
         ///已经进行保护 如果这里错误后续就直接退出

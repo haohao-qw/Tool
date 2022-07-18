@@ -149,7 +149,7 @@ void* be_thdo(void* args);
 
 #define LOG_FATAL(fmt,args...)\
 	do{\
-		async_log::getinstance()->Write("[FATAL]","[%u]%s:%d(%s):" fmt ,\
+		async_log::getinstance()->Write("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
