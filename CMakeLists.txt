@@ -26,19 +26,22 @@ message(STATUS "build type:")
 message(STATUS "CXX_FLAGS = ${CMAKE_CXX_FLAGS} ")
 
 #包含头文件信息
-include_directories(${PROJECT_SOURCE_DIR}/async_log/include)
+include_directories(${PROJECT_SOURCE_DIR}/log/include)
 include_directories(${PROJECT_SOURCE_DIR}/Filets/include)
-include_directories(${PROJECT_SOURCE_DIR}/free_lock_queue/include)
+include_directories(${PROJECT_SOURCE_DIR}/threadpool/include)
+include_directories(${PROJECT_SOURCE_DIR}/Utils/include)
 
 #添加子目录 递归Cmakelists 里层的先编译出库供外面的进行调用或者直接依靠源文件也可以进行编译
-add_subdirectory(${PROJECT_SOURCE_DIR}/async_log)
-add_subdirectory(${PROJECT_SOURCE_DIR}/free_lock_queue)
+add_subdirectory(${PROJECT_SOURCE_DIR}/log)
+add_subdirectory(${PROJECT_SOURCE_DIR}/threadpool)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Filets)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Utils)
 
 set(LIBLIST
-        free_lock_queue
-        filets
-        async_log
+        threadpool
+        Filets
+        log
+        Utils
         pthread
         )
 
@@ -46,8 +49,8 @@ set(LIBLIST
 add_executable(main main.cpp)
 target_link_libraries(main ${LIBLIST})
 
-add_executable(log example/log.cc)
-target_link_libraries(log ${LIBLIST})
+add_executable(Log example/log.cc)
+target_link_libraries(Log ${LIBLIST})
 
 add_executable(log_buffer example/log_buffer.cc)
 target_link_libraries(log_buffer ${LIBLIST})
@@ -64,6 +67,9 @@ target_link_libraries(Server ${LIBLIST})
 
 add_executable(Client example/Client.cc)
 target_link_libraries(Client ${LIBLIST})
+
+add_executable(syn_log example/syn_logs.cc)
+target_link_libraries(syn_log ${LIBLIST})
 
 
 

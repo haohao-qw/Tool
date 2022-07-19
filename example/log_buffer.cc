@@ -1,4 +1,4 @@
-#include"buffer.hpp"
+#include"log_buffer.hpp"
 #include<stdio.h>
 #include<string.h>
 

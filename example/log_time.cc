@@ -1,4 +1,4 @@
-#include "timer.hpp"
+#include "log_timer.hpp"
 
 int main(){
 	log_timer time;

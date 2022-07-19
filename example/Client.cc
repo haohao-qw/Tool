@@ -1,5 +1,5 @@
-#include"Thread.h"
-#include"client.h"
+#include"File_client.hpp"
+#include "lock_threadpool.hpp"
 
 
 int main(int argc, char **argv)

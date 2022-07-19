@@ -8,10 +8,9 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 set(LIB_SOUR
-	src/server.cc
-	src/client.cc
-	src/Thread.cc
+	src/File_client.cc
+	src/File_server.cc
         )
 
 #add_library(filets STATIC ${LIB_SOUR})
-add_library(filets SHARED ${LIB_SOUR})
+add_library(Filets SHARED ${LIB_SOUR})
