@@ -1,1 +1,0 @@
-g++ -fPIC -std=c++20 -g -lpthread -march=native -O0  -O0 -Wall -g -ggdb -shared -Wl,-soname,libfilets.so -o ../../lib/libfilets.so CMakeFiles/filets.dir/src/server.cc.o CMakeFiles/filets.dir/src/client.cc.o CMakeFiles/filets.dir/src/Thread.cc.o 
