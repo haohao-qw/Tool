@@ -1,7 +1,0 @@
-/opt/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/local/gcc-11.2.0/bin/x86_64-pc-linux-gnu-gcc -DCMAKE_CXX_COMPILER=/usr/local/gcc-11.2.0/bin/x86_64-pc-linux-gnu-g++ -G "CodeBlocks - Unix Makefiles" /Code/c++/my_code_project/base_pro/tool/NFT
--- Debug版本
--- build type:
--- CXX_FLAGS = -std=c++20 -g  -march=native -O0 
--- Configuring done
--- Generating done
--- Build files have been written to: /Code/c++/my_code_project/base_pro/tool/NFT/cmake-build-debug
