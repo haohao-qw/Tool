@@ -1,13 +1,13 @@
 #include "File_client.hpp"
 #include "File_utils.hpp"
 
-/*信息交换sockfd*/
-int info_fd;
-///写client时定义
-
 char* mbegin;
 
-/*初始化发送的文件*/
+void Client::Init(){
+    Client_init(SERVER_IP);
+    InitFile();
+}
+
 void Client::InitFile(){
     char filename[FILENAME_MAXLEN] = {0};
     printf("BLOCKSIZE=  %d\n",BLOCKSIZE);
@@ -100,16 +100,28 @@ void Client::Transform(int last_bs){///由上面接收
 int Client::createfile(char *filename, int size)
 {
 	int fd = open(filename, O_RDWR | O_CREAT);
+	if(fd!=0){
+	    return -1;
+	}
 	//fchmod更改文件权限
-	fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
-	lseek(fd, size-1, SEEK_SET);///移动文件指针
-	write(fd, "", 1);///TODO:无效操作
+	int ret=fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+	if(ret!=0){
+	    return -1;
+	}
+	ret=lseek(fd, size-1, SEEK_SET);///移动文件指针
+	if(ret==-1){
+        return  -1;
+	}
+
+	ret=write(fd, "", 1);///TODO:无效操作
+	if(ret==-1){
+	    return -1;
+	}
 	close(fd);
 	return 0;
 }
 
 
-//创建文件头部信息
 struct filehead * Client::create_file_head(char *filename, int conid, int* offset)
 {
     struct filehead* file_head = (filehead*)malloc(head_len);
@@ -123,7 +135,6 @@ struct filehead * Client::create_file_head(char *filename, int conid, int* offse
 }
 
 
-//发送文件信息
 void Client::send_fileinfo(int sock_fd, char *fname, struct stat* p_fstat, struct fileinfo *file_info, int *p_last_bs)
 {
     ///fileinfo:用于发送的文件信息 逻辑：进行初始化并且发送
@@ -161,8 +172,7 @@ void Client::recv_fileinfo(int sockfd){
 	///todo：进行交互反馈
 }
 
-//发送文件数据 作为回调使用 args传filehead结构体
-void * Client::send_filedata(void *args)
+void* Client::send_filedata(void *args)
 {
     ///具体文件由args传入 传入内容是 filehead结构体
     struct HeadArg* arg= (struct HeadArg *)args;
@@ -174,9 +184,8 @@ void * Client::send_filedata(void *args)
     printf("-------------------------\n");
 
 	//set_fd_noblock(sock_fd);
-
 	/*发送type和数据块头部*/
-    	/*和发送头部逻辑不同：前四个字节是全1 同样发送头部信息 依赖于传入内容决定本次头部信息*/
+	/*和发送头部逻辑不同：前四个字节是全1 同样发送头部信息 依赖于传入内容决定本次头部信息*/
     char send_buf[200]= {0};
     int type=255;
     memcpy(send_buf, &type, INT_SIZE);
@@ -192,7 +201,6 @@ void * Client::send_filedata(void *args)
             ++p;
         }
     }
-//	printf("head_len = %d ; send head: sendsize = %d\n",head_len, sendsize);
 
 	/*发送数据块*/
 	printf("Thread : send filedata\n");
@@ -203,10 +211,8 @@ void * Client::send_filedata(void *args)
 	    ///连续发送
 		if( (send_size = send(m_sockfd, fp, SEND_SIZE, 0)) == SEND_SIZE){
 			fp+=SEND_SIZE;
-//			printf("fp = %p ; a SEND_SIZE ok\n", fp);
 		}
 		else{
-//			printf("send_size = %d ;  a SEND_SIZE erro\n",send_size);
 		}
 	}
 

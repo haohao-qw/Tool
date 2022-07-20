@@ -1,12 +1,55 @@
 #include "File_server.hpp"
 #include "lock_threadpool.hpp"
 
-/*
-extern int fileinfo_len ;
-extern socklen_t sockaddr_len ;
-extern int head_len ;
-extern int conn_len ;
-*/
+void Server::Init(){
+    /*创建线程池*/
+    if (thread_pool_create(THREAD_NUM) != 0) {
+        printf("tpool_create failed\n");
+        exit(-1);
+    }
+    printf("--- Thread Pool Strat ---\n");
+    /*初始化server，监听请求*/
+    m_listenfd = Server_init(PORT);
+    socklen_t sockaddr_len = sizeof(struct sockaddr);
+
+    /*epoll*/
+    m_epfd = epoll_create(EPOLL_SIZE);
+    m_ev.events = EPOLLIN;
+    m_ev.data.fd = m_listenfd;
+    epoll_ctl(m_epfd, EPOLL_CTL_ADD, m_listenfd, &m_ev);
+}
+
+
+void Server::RecvTransfrom(){
+    while(1){
+        int events_count = epoll_wait(m_epfd, m_events, EPOLL_SIZE, -1);
+        int i=0;
+
+        /*接受连接，添加work到work-Queue*/
+        for(; i<events_count; i++){
+            if(m_events[i].data.fd == m_listenfd)
+            {
+                int connfd;
+                struct sockaddr_in  clientaddr;
+                socklen_t sockaddr_len = sizeof(struct sockaddr);
+                while( ( connfd = ::accept(m_listenfd, (struct sockaddr *)&clientaddr, &sockaddr_len) ) > 0 )
+                {
+                    ///进行线程分发 也就是将任务丢到任务队列中
+                    printf("EPOLL: Received New Connection Request---connfd= %d\n",connfd);
+                    struct args *p_args = (struct args *)malloc(sizeof(struct args));
+                    p_args->sockfd = connfd;
+                    p_args->recv_finfo = recv_fileinfo;
+                    p_args->recv_fdata = recv_filedata;
+                    p_args->server=this;
+                    /*添加work到work-Queue*/
+                    //worker：绑定的线程函数
+                    thread_pool_add_work(worker, (void*)p_args);
+                }
+            }
+        }
+    }
+}
+
 
 int Server::createfile(char *filename, int size)
 {

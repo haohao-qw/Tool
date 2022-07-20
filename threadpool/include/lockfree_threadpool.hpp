@@ -15,9 +15,18 @@ using namespace std;
 template<typename T>
 class ThreadPoolBase {
   public:
-  //子类进行实现 可以进行扩展
+    /**
+     * @brief TODO 初始化配置
+     */
   virtual void Init() {};
+  /**
+   * @brief TODO 结束时优化
+   */
   virtual void Finish() {};
+  /**
+   * @brief 子类必须实现，val是队列中取出的元素，对其进行一系列操作，或是函数执行，或是基础数据进行运算
+   * @param val 泛型数据
+   */
   virtual void Handle(const T &val)=0;///纯虚函数 必须实现
  
  public:
@@ -34,20 +43,31 @@ class ThreadPoolBase {
    }
 
 
-  ///将任务或者其他数据类型加入队列
+   /**
+    * @brief 可能插入不成功
+    * @param val
+    * @return
+    */
   bool Push(const T &val){
       bool flag=m_queue.push(val);
       return flag;
   }
- 
-  int Start(){
+
+  /**
+   * @brief 初始化线程池
+   */
+  void Start(){
       for (int i=0; i < m_size; i++) {
           m_threadpool.push_back( thread(&ThreadPoolBase<T>::Worker, this));
       }
-      return 0;
+      return;
   }
 
-  int Stop(){
+  /**
+   * @brief 跑线程
+   * @return
+   */
+  int Run(){
       for (int i=0; i < m_size; i++) {
           m_threadpool[i].join();
       }
@@ -60,18 +80,27 @@ class ThreadPoolBase {
 
  
  private:
+    /**
+     * @brief 工作线程
+     */
   void Worker(){
       unsigned int val_count = 0;
       while (1) {
-	  if(m_queue.empty())break;
-          T val = m_queue.pop();///取出任务  这里是阻塞的
+	  if(m_queue.empty())break; //TODO：进行自我销毁 采用某种策略动态扩容
+          T val = m_queue.pop();///取出任务 存在不能取出任务的情况 内容为空
+          if(!val){
+              continue;
+          }
           ///根据内容进行具体处理
           Handle(val);///任务处理函数 交给子类自定义进行实现 扩展性质
       }
   }
- 
+
+  ///线程池线程个数
   int m_size;
-  CLockFreeQueue<T> m_queue; //无锁队列
+  ///无锁队列结构
+  CLockFreeQueue<T> m_queue;
+  ///容器封装的线程池
   vector<thread> m_threadpool;
 };
 

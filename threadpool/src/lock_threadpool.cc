@@ -21,7 +21,6 @@ static void* thread_routine(void *arg)///arg有啥用
         while(!threadpool->queue_head || !threadpool->shutdown) {//TODO:条件
             pthread_cond_wait(&threadpool->queue_ready, &threadpool->queue_lock);
         }
-
 		/*查看线程池开关，如果线程池关闭，线程退出*/
         if (threadpool->shutdown) {
             pthread_mutex_unlock(&threadpool->queue_lock);
@@ -42,7 +41,7 @@ static void* thread_routine(void *arg)///arg有啥用
 }
 
 /* 创建线程池 */
-int thread_pool_create(int max_thr_num)
+thread_pool_t* thread_pool_create(int max_thr_num)
 {
     int i;
 	/*创建进程池结构体*/
@@ -81,7 +80,7 @@ int thread_pool_create(int max_thr_num)
             exit(-1);
         }
     }
-    return 0;
+    return threadpool;
 }
 
 /* 销毁线程池 */

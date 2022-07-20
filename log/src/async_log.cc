@@ -8,13 +8,7 @@
 
 #include "async_log.hpp"
 
-const int BUFF_WAIT_TIME=1;
-const int RELOG_TIME=5;
 const int LOG_LEN=512;
-const int LOG_USE=1024;
-
-const int MEM_USE=1024;
-
 int BUF_LEN=2*1024*1024;
 
 static pid_t Getpid(){
@@ -24,9 +18,10 @@ static pid_t Getpid(){
 ////初始化静态成员变量，静态成员初始化优先类构造 因此要先进行初始化
 //pthread_mutex_t async_log::m_mutex=PTHREAD_MUTEX_INITIALIZER;
 //pthread_cond_t async_log::m_cond=PTHREAD_COND_INITIALIZER;
-pthread_once_t async_log::m_once=PTHREAD_ONCE_INIT;
-
-async_log* async_log::m_instance=nullptr;
+//once初始化
+pthread_once_t async_log::sm_once=PTHREAD_ONCE_INIT;
+//静态变量类外初始化
+async_log* async_log::sm_instance=nullptr;
 
 
 /*完成初始化 主要工作室完成buffer初始化 一开始三个buffer指针是指向同一个地方 做成环*/
@@ -60,10 +55,10 @@ void async_log::set_path(const char* log_dir,const char* prog_name,int level){
 	string key_name=m_prog_name;
 	string key=key_dir+"/"+key_name;
 	dirname=key;
-    printf("dirname%s\n",dirname.c_str());
+  //  printf("dirname%s\n",dirname.c_str());
     hash[key]=0;///一开始偏移长度为0
 
-    printf("文件名:%s\n",dirname.c_str());
+  //  printf("文件名:%s\n",dirname.c_str());
     File[dirname]=fopen(dirname.c_str(),"w");///不存在就新创建一个 TODO：问题：可否被多个线程打开
 
     fseek(File[dirname],0,SEEK_SET);
@@ -96,7 +91,7 @@ int async_log::consumer(Buffer* node){
 		printf("文件内容:%s %s %d %d\n",head->file_name,head->file_dir,head->status,head->offset);
 		FILE* fp=File[dirname];
 
-        printf("消费者逻辑:拿到 dirname:%s\n",dirname.c_str());
+//        printf("消费者逻辑:拿到 dirname:%s\n",dirname.c_str());
 		if(fp==NULL){
 			printf("fpoen %s error\n",head->file_name);
 			return -1;
@@ -127,13 +122,13 @@ void async_log::persistent(){
 	Buffer* node=m_product;
 	while(1){
 		int ret=readme(node);
-        printf("节点状态：1:INIT 2:FREE 3:FULL :%d\n",ret);
+  //      printf("节点状态：1:INIT 2:FREE 3:FULL :%d\n",ret);
         if(ret==1||ret==2){
 		    ///1:INIT 2:FREE 3:FULL
 			node=node->next;
 			continue;
 		}
-        printf("找到一个节点可以进行持久化\n");
+    //    printf("找到一个节点可以进行持久化\n");
 		///可以进行持久化 TODO:把锁放到具体某个节点上
 		ret=consumer(node);
 		if(-1==ret){
@@ -155,11 +150,7 @@ int async_log::try_append(const char*lvl,const char* format,va_list args){
 	char log_line[LOG_LEN];
 	///直接拿到时间和写入长度  LOG_LEN表示最大写入大小
 	int prev_len=snprintf(log_line,LOG_LEN,"%s[%s.%03d]",lvl,m_tm.time_fmt,ms);
-	//va_list arg_ptr;
-	//va_start(arg_ptr,format);
-	//第一个：指针指向 第二个：指定大小 第三个：格式化参数 第四个：可变参数列表
-	//比如 test(const char* format,...); 
-	//test("%d%s",5,"world")
+
 	int len=vsnprintf(log_line+prev_len,LOG_LEN-prev_len,format,args);
 	//va_end(arg_ptr);//完成内容的嵌入
 	uint32_t Len=len+prev_len; ///总共写入到大小
@@ -179,6 +170,7 @@ int async_log::try_append(const char*lvl,const char* format,va_list args){
 }
 
 void async_log::Write(const char* lvl,const char* format,...){
+    ///注意：可变参数的嵌套使用
 	va_list args;
 	va_start(args,format);
 	int ret=try_append(lvl,format,args);

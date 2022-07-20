@@ -1,11 +1,13 @@
 #ifndef __LCKFREE_H__
 #define __LCKFREE_H__
 #include<atomic>
-using namespace std;
- 
+#define COUNT 100
 template<typename T>
 class CLockFreeQueue {
   private:
+    /**
+     * @brief 内部节点 双向链表
+     */
    struct LinkNode {
    T m_val;
    LinkNode* next=nullptr;
@@ -43,17 +45,49 @@ class CLockFreeQueue {
       delete m_head;
       delete m_tail;
   }
- 
+
+ /**
+  * @brief 无锁插入操作
+  * @param val 插入的元素类型 基础数据类型或者任务
+  * @return
+  */
   bool push(const T &val){
       LinkNode_t * node = new LinkNode;
       node->m_val=val;
-
       do {
 	///插到队尾 原子操作
-	while(__sync_bool_compare_and_swap(&(node->prev),nullptr,m_tail->prev)!=true);
-	while(__sync_bool_compare_and_swap(&(m_tail->prev->next),m_tail,node)!=true);
-	while(__sync_bool_compare_and_swap(&(node->next),nullptr,m_tail)!=true);
-        while(__sync_bool_compare_and_swap(&(m_tail->prev),node->prev,node) != true);
+	static int count=0;///每个尝试一百次后失败就放弃
+	while(__sync_bool_compare_and_swap(&(node->prev),nullptr,m_tail->prev)!=true){
+	    count++;
+	    if(count>COUNT){
+	        count=0;
+	        return false;
+	    }
+	}
+	count=0;
+	while(__sync_bool_compare_and_swap(&(m_tail->prev->next),m_tail,node)!=true){
+        count++;
+        if(count>COUNT){
+            count=0;
+            return false;
+        }
+    }
+	count=0;
+	while(__sync_bool_compare_and_swap(&(node->next),nullptr,m_tail)!=true){
+        count++;
+        if(count>COUNT){
+            count=0;
+            return false;
+        }
+    }
+	count=0;
+	while(__sync_bool_compare_and_swap(&(m_tail->prev),node->prev,node) != true){
+        count++;
+        if(count>COUNT){
+            count=0;
+            return false;
+        }
+    }
 	m_length++;
 	}while(0);
 
@@ -61,14 +95,40 @@ class CLockFreeQueue {
       return true;
   }
 
+  /**
+   * @brief 没有成功情况下返回空 因此需要进行特判定
+   * @return
+   */
   T pop(){
       LinkNode_t * node=nullptr;
       do{
 	      ///需要考虑为空的情况
 	   if(m_head->next==m_tail)return T();
-	   while(__sync_bool_compare_and_swap(&(node),nullptr,m_tail->prev)!=true);
-	   while(__sync_bool_compare_and_swap(&(m_tail->prev),node,node->prev)!=true);
-	   while(__sync_bool_compare_and_swap(&(node->prev->next),node,m_tail)!=true);
+	   static int count=0;
+	   while(__sync_bool_compare_and_swap(&(node),nullptr,m_tail->prev)!=true){
+           count++;
+           if(count>COUNT){
+               count=0;
+               return T();
+           }
+       }
+	   count=0;
+	   while(__sync_bool_compare_and_swap(&(m_tail->prev),node,node->prev)!=true){
+           count++;
+           if(count>COUNT){
+               count=0;
+               return T();
+           }
+       }
+	   count=0;
+	   while(__sync_bool_compare_and_swap(&(node->prev->next),node,m_tail)!=true){
+           count++;
+           if(count>COUNT){
+               count=0;
+               return T();
+           }
+       }
+	   count=0;
 	   m_length--;
 	   node->prev=nullptr;
 	   node->next=nullptr;

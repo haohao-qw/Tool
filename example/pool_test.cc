@@ -35,16 +35,14 @@ int main(){
 		pool.Push(std::bind(fun,i));
 	}
 	pool.Start();
-	pool.Stop();
-	/*
-	it pool(8);
-	printf("start...\n");
-	for(int i=0;i<1000000;i++){
-		pool.Push(i);
-	}
-	pool.Start();
-	pool.Stop();
-	*/
-	return 0;
+	pool.Run();
+//	it pool(8);
+//	printf("start...\n");
+//	for(int i=0;i<1000000;i++){
+//		pool.Push(i);
+//	}
+//	pool.Start();
+//	pool.Run();
+//	return 0;
 }
 

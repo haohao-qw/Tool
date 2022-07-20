@@ -18,7 +18,7 @@ class log_timer{
 		int m_min;
 		int m_sec;
 
-		//提供yyyy-mm-dd hh:mm:ss格式
+		///提供yyyy-mm-dd hh:mm:ss格式
 		char time_fmt[20];
 		
 		///记录上一条日志时分 减少系统调用
@@ -60,6 +60,11 @@ class log_timer{
 		}
 
 
+		/**
+		 * @brief 返回当前时间
+		 * @param out_tsec
+		 * @return
+		 */
 		uint64_t get_cur_time(int*out_tsec=NULL ){
 			struct timeval tv;
 			gettimeofday(&tv,NULL);
@@ -94,6 +99,10 @@ class log_timer{
 			return tv.tv_sec;
 		}
 
+		/**
+		 * @brief 返回实际存储的内容
+		 * @return
+		 */
 		const char* get_timefmt()const{
 			return time_fmt;
 		}

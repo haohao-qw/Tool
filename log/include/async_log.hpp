@@ -29,43 +29,42 @@ enum LOG_LEVEL{
 #define prog_name_len 128
 #define log_dir_path_size 128
 
-///这里先只做单生产者
 class async_log{
 	private:
+        ///文件对应的偏移
 		std::unordered_map<string,int>hash;
+        ///文件名对应的打开的文件指针
         std::unordered_map<string,FILE*>File;
+        ///对应的路径+文件名 可以定位到目录中的文件
 		string dirname;
-
+		///用于结合hash校正每一个文件节点的正确偏移
 		int m_first_offet;
-
-		///文件名构造：时间_数值.log
-		int m_buf_count;   //缓冲区数量尽量多
-		uint32_t m_buflen;///一块缓冲区的大小
+		///节点缓冲区个数，与性能有关
+		int m_buf_count;
+		///单个节点缓冲区大小，与效率性能有关
+		uint32_t m_buflen;
+		///生产者对应的节点
 		Buffer* m_product;  ///生产节点
-
-		pid_t m_pid;//保存具体线程
-		
-		//日志内容相关
+        ///保存线程id
+		pid_t m_pid;
+		///日志内容相关
 		int m_year,m_mon,m_day;///日志时间
 		int m_log_cnt;///日志条数 TODO
 		
 		///设置输出地
 		char m_prog_name[prog_name_len];//日志输出名称
 		char m_log_dir[log_dir_path_size];//路径
-
-		int m_level;//日志等级
-		
-		log_timer m_tm;///时间
+        ///日志等级
+		int m_level;
+		///UTC时间
+		log_timer m_tm;
 
 		///TODO:设置静态的原因：静态成员属于类而不属于具体某个类，可以实现多个对象共享
-		//变量的同时可以不破坏封装 同时能节省内存
+		static pthread_mutex_t sm_mutex;//全局锁
+		static pthread_cond_t sm_cond;///通知相关的
+		static async_log* sm_instance;///单例对象
+		static pthread_once_t sm_once;///用于通知一次
 
-		static pthread_mutex_t m_mutex;//全局锁
-		static pthread_cond_t m_cond;///通知相关的
-		static async_log* m_instance;///单例对象
-		static pthread_once_t m_once;///用于通知一次
-
-		
 	private:
 		async_log();///单例下私有构造函数 不能构造栈上变量
 	public:
@@ -87,40 +86,78 @@ class async_log{
 		async_log(const async_log&)=delete;
 		async_log& operator=(const async_log&)=delete;
         ~async_log(){
+            for(auto file:File){
+                fclose(file.second);
+            }
             File.clear();
             hash.clear();
         }
+
 	public:
 
         int getcount()const{
             return m_buf_count;
         }
 
+        ///单例模式
 		static async_log* getinstance(){
-			///等待初始化条件满足
-			pthread_once(&m_once,async_log::init);
-			return m_instance;
+			pthread_once(&sm_once,async_log::init);
+			return sm_instance;
 		}
 
 		static void init(){
-			while(!m_instance)m_instance=new async_log();
+			while(!sm_instance)sm_instance=new async_log();
 		}
 
+		/**
+		 * #+@brief 初始化目录 文件名 等级
+		 * @param log_dir
+		 * @param prog_name
+		 * @param level
+		 */
 		void set_path(const char* log_dir,const char* prog_name,int level);
 
+		/**
+		 * @brief 获取日志等级
+		 * @return
+		 */
 		int get_level()const{return m_level;}
 
-		//进行持久化操作
+		/**
+		 *@brief 持久化操作
+		 * @param node
+		 * @return
+		 */
 		int consumer(Buffer* node);
 
+		/**
+		 * @brief 封装一层的写函数
+		 * @param lvl
+		 * @param format
+		 * @param ...
+		 */
 		void Write(const char* lvl,const char* format,...);
 
+		/**
+		 * @brief 持久化
+		 */
 		void persistent();
 
-
+		/**
+		 * @brief 里面的写逻辑,采用可变参数
+		 * @param lvl
+		 * @param format
+		 * @param args
+		 * @return
+		 */
 		int try_append(const char* lvl,const char* format,va_list args);//外面逻辑由consumer进行
 };
 
+/**
+ * @brief 线程入口函数
+ * @param args
+ * @return
+ */
 void* be_thdo(void* args);
 
 /***************************************工具宏********************************************/
@@ -135,7 +172,6 @@ void* be_thdo(void* args);
 	}while(0)
 
 ///format:[LEVEL][yy-mm-dd h:m:s[tid][file_name]:line (fun_name):content
-//创建线程跑运行函数 挂起跑
 #define LOG_INIT(log_dir,prog_name,level)\
 	do\
 	{\
