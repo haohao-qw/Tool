@@ -1,5 +1,5 @@
-#ifndef __LOG_H__
-#define __LOG_H__
+#ifndef LOG_H__
+#define LOG_H__
 
 #include <string>
 #include <memory>
@@ -246,7 +246,6 @@ public:
      * - %%f 文件名
      * - %%l 行号
      * - %%t 线程id
-     * - %%F 协程id
      * - %%N 线程名称
      * - %%% 百分号
      * - %%T 制表符
@@ -256,7 +255,7 @@ public:
      * 
      * 默认格式描述：年-月-日 时:分:秒 [累计运行毫秒数] \\t 线程id \\t 线程名称 \\t 协程id \\t [日志级别] \\t [日志器名称] \\t 文件名:行号 \\t 日志消息 换行符
      */
-    LogFormatter(const std::string &pattern = "%d{%Y-%m-%d %H:%M:%S} [%rms]%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n");
+    LogFormatter(const std::string &pattern = "%d{%Y-%m-%d %H:%M:%S} [%rms]%T%t%T%N%T%T[%p]%T[%c]%T%f:%l%T%m%n");
 
     /**
      * @brief 初始化，解析格式模板，提取模板项
@@ -527,11 +526,6 @@ public:
     LoggerManager();
 
     /**
-     * @brief 初始化，主要是结合配置模块实现日志模块初始化
-     */
-    void init();
-
-    /**
      * @brief 获取指定名称的日志器
      */
     Logger::ptr getLogger(const std::string &name);
@@ -540,11 +534,6 @@ public:
      * @brief 获取root日志器，等效于getLogger("root")
      */
     Logger::ptr getRoot() { return m_root; }
-
-    /**
-     * @brief 将所有的日志器配置转成YAML String
-     */
-    std::string toYamlString();
 
 private:
     /// Mutex

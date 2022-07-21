@@ -108,5 +108,4 @@ class log_timer{
 		}
 };
 
-
 #endif

@@ -424,7 +424,6 @@ void FileLogAppender::log(LogEvent::ptr event) {
             std::cout << "[ERROR] FileLogAppender::log() format error" << std::endl;
         }
     }
-    
 }
 
 bool FileLogAppender::reopen() {
@@ -492,7 +491,6 @@ LoggerManager::LoggerManager() {
     m_root.reset(new Logger("root"));
     m_root->addAppender(LogAppender::ptr(new StdoutLogAppender));
     m_loggers[m_root->getName()] = m_root;
-    init();
 }
 
 /**
@@ -510,11 +508,3 @@ Logger::ptr LoggerManager::getLogger(const std::string &name) {
     m_loggers[name] = logger;
     return logger;
 }
-
-/**
- * @todo 实现从配置文件加载日志配置
- */
-void LoggerManager::init() {
-}
-
-///////////////////////////////////////////////////////////////////////////////

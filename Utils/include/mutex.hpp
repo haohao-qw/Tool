@@ -1,5 +1,5 @@
-#ifndef __LT_MUTEX_H__
-#define __LT_MUTEX_H__
+#ifndef MUTEX_H__
+#define MUTEX_H__
 
 #include <thread>
 #include <functional>
@@ -83,6 +83,13 @@ public:
             m_locked = false;
         }
     }
+
+    /**
+     * @brief 返回是否上锁
+     */
+     bool IsLock()const{
+         return m_locked;
+     }
 private:
     /// mutex
     T& m_mutex;
@@ -421,4 +428,4 @@ private:
     volatile std::atomic_flag m_mutex;
 };
 
-#endif // __LT_MUTEX_H__
+#endif

@@ -7,7 +7,7 @@ int main(){
     appender->setFormatter(formatter);
     logger->addAppender(appender);
     logger->setLevel(LogLevel::NOTSET);
-    for(int i=0;i<1000000;i++) {
+    for(int i=0;i<10000;i++) {
         LOG_FMT_DEBUG(logger, "fatal %s: %d", __FILE__, __LINE__);
         LOG_FATAL(logger) << "FATAL is ok";
         LOG_ERROR(logger) << "error is ok";
@@ -24,7 +24,5 @@ int main(){
     LOG_DEBUG(root)<<"root debug is ok";
     LOG_FATAL(root)<<"root fatal is ok";
     LOG_WARN(root)<<"root warn is ok";
-
-
     return 0;
 }

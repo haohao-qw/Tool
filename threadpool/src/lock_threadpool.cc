@@ -16,13 +16,14 @@ static void* thread_routine(void *arg)///arg有啥用
     while(1){
         /* 如果任务队列为空,且线程池未关闭，线程阻塞等待任务 */
         pthread_mutex_lock(&threadpool->queue_lock);
-	///等待队列中有任务或者线程池关闭
+	    ///等待队列中有任务或者线程池关闭
         //while(!threadpool->queue_head && !threadpool->shutdown) {
         while(!threadpool->queue_head || !threadpool->shutdown) {//TODO:条件
             pthread_cond_wait(&threadpool->queue_ready, &threadpool->queue_lock);
         }
 		/*查看线程池开关，如果线程池关闭，线程退出*/
         if (threadpool->shutdown) {
+            LOG_INFO(g_logger)<<"线程池关闭退出";
             pthread_mutex_unlock(&threadpool->queue_lock);
             pthread_exit(NULL);
         }
@@ -47,7 +48,8 @@ thread_pool_t* thread_pool_create(int max_thr_num)
 	/*创建进程池结构体*/
     threadpool= (thread_pool_t*)calloc(1, sizeof(thread_pool_t));
     if (!threadpool) {
-        printf("%s: calloc threadpool failed\n", __FUNCTION__);
+        LOG_ERROR(g_logger)<<"线程池创建失败 calloc threadpool failed";
+        //printf("%s: calloc threadpool failed\n", __FUNCTION__);
         exit(1);
     }
 
@@ -57,26 +59,30 @@ thread_pool_t* thread_pool_create(int max_thr_num)
     threadpool->queue_head = NULL;
     threadpool->queue_tail = NULL;
     if (pthread_mutex_init(&threadpool->queue_lock, NULL) !=0) {
-        printf("%s: pthread_mutex_init failed, errno:%d, error:%s\n",
-            __FUNCTION__, errno, strerror(errno));
+        LOG_ERROR(g_logger)<<"互斥量初始化失败 pthread_init_faile "<<strerror(errno);
+      //  printf("%s: pthread_mutex_init failed, errno:%d, error:%s\n",
+        //    __FUNCTION__, errno, strerror(errno));
         exit(-1);
     }
     if (pthread_cond_init(&threadpool->queue_ready, NULL) !=0 ) {
-        printf("%s: pthread_cond_init failed, errno:%d, error:%s\n",
-            __FUNCTION__, errno, strerror(errno));
+        LOG_ERROR(g_logger)<<"条件变量初始化失败 pthread_cond_init_faile "<<strerror(errno);
+        //printf("%s: pthread_cond_init failed, errno:%d, error:%s\n",
+          //  __FUNCTION__, errno, strerror(errno));
         exit(-1);
     }
 
     /* 创建worker线程 */
     threadpool->thr_id = (pthread_t*)calloc(max_thr_num, sizeof(pthread_t));
     if (!threadpool->thr_id) {
-        printf("%s: calloc thr_id failed\n", __FUNCTION__);
+        LOG_ERROR(g_logger)<<"线程分配失败 calloc thr_id failed ";
+        //printf("%s: calloc thr_id failed\n", __FUNCTION__);
         exit(1);
     }
     for (i = 0; i < max_thr_num; ++i) {
 	    ///绑定入口函数
         if (pthread_create(&threadpool->thr_id[i], NULL, thread_routine, NULL) != 0){
-            printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__, errno, strerror(errno));
+            LOG_ERROR(g_logger)<<"入口函数绑定失败 pthread_create_faile "<<strerror(errno);
+           // printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__, errno, strerror(errno));
             exit(-1);
         }
     }
@@ -132,13 +138,15 @@ int thread_pool_add_work(void*(*routine)(void*), void *arg)
     thread_node_t *work;
 
     if (!routine){
-        printf("%s:Invalid argument\n", __FUNCTION__);
+        LOG_ERROR(g_logger)<<"Invalid argument";
+        //printf("%s:Invalid argument\n", __FUNCTION__);
         return -1;
     }
 
     work = (thread_node_t*)malloc(sizeof(thread_node_t));
     if (!work) {
-        printf("%s:malloc failed\n", __FUNCTION__);
+        LOG_ERROR(g_logger)<<"malloc failed";
+        //printf("%s:malloc failed\n", __FUNCTION__);
         return -1;
     }
     work->routine = routine;
@@ -149,12 +157,14 @@ int thread_pool_add_work(void*(*routine)(void*), void *arg)
     pthread_mutex_lock(&threadpool->queue_lock);
 	/*任务链表为空*/
     if ( !threadpool->queue_head ) {
+        LOG_INFO(g_logger)<<"任务链表非空";
 //		printf("first work in work-queue\n");
         threadpool->queue_head = work;
 	threadpool->queue_tail = work;
     }
 	/*任务链表非空，查询任务链表末尾*/
 	else {
+        LOG_INFO(g_logger)<<"任务链表为空";
 //		printf("not first work in work-queue\n");
 		threadpool->queue_tail->next=work;
 		threadpool->queue_tail=work;

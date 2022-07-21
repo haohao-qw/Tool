@@ -2,6 +2,14 @@
 #define THREAD_POOL_H__
 
 #include <pthread.h>
+
+///同步日志 异步日志
+//#include "async_log.hpp"
+#include "syn_log.hpp"
+
+Logger::ptr g_logger=LOG_ROOT();
+
+
 ////独立的加锁线程池
 
 class Server;

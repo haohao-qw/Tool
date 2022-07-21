@@ -6,6 +6,7 @@
 #include<cstring>
 #include<pthread.h>
 #include<errno.h>
+#include "syn_log.hpp"
 
 const int FILE_NAME=128;
 const int FILE_DIR=128;
@@ -62,7 +63,6 @@ public:
 			next(NULL),
 			total_len(len),
 			used_len(headnode_size){
-
             m_mutex=PTHREAD_MUTEX_INITIALIZER;
 			if(total_len<headnode_size)total_len=headnode_size;
 			data=new char[len];///headnode数据由生产者进行初始化
@@ -201,9 +201,6 @@ public:
 		 * @return 成功返回写入的长度 失败返回-1
 		 */
 		int try_write(FILE* fp){///需要外部进行fp偏移的设定 同时fp由外部进行关闭
-			//将data中used_len长度的数据写入fp中
-		//	uint32_t try_len=fwrite(data,headnode_size,used_len,fp);
-			//int ret=fseek(fp,used_len,SEEK_SET);
 			uint32_t try_len=fwrite(data+headnode_size,1,used_len-headnode_size,fp);
 			printf("节点写入文件流大小:%d",try_len);
 			if(try_len!=used_len-headnode_size){
