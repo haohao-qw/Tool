@@ -62,16 +62,10 @@ public:
     void InitFile();
 
     /**
-     * @brief  完成文件信息的初始化，通过mmap建立内存映射
-     * @return 最后一个分块的大小 0:最后一个分块为BLOCKSIZE大小，大于0：最后一个分块具体大小
-     */
-    int  SendFileInfo();
-
-    /**
      * @brief 对外暴露的发送接口
      * @param last_bs 传入最后一个分块的大小
      */
-    void Transform(int last_bs);
+    void Transform();
 
 private:
 

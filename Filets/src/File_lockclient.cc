@@ -1,5 +1,8 @@
-#include "File_client.hpp"
+#include "File_lockclient.hpp"
 #include "File_utils.hpp"
+#include "syn_log.hpp"
+
+Logger::ptr logger=LOG_ROOT();
 
 char* mbegin;
 
@@ -17,24 +20,26 @@ void Client::InitFile(){
     m_openfd = open(m_filename, O_RDWR);
     if(m_openfd==-1) {
         printf("open file:%s failed,exit\n", m_filename);
+        LOG_ERROR(logger)<<"open file" <<m_filename<<"failed";
         exit(-1);
+    }else{
+        printf("open file %s \n",m_filename);
     }
     fstat(m_openfd,&m_filestat);///初始化m_filestat
 }
 
-int  Client::SendFileInfo(){
+void Client::Transform(){
     int last_bs=0;
     send_fileinfo(m_sockfd, m_filename, &m_filestat, &m_info, &last_bs);///这里完成了info的初始化
     mbegin = (char *)::mmap(NULL, m_filestat.st_size, PROT_WRITE|PROT_READ, MAP_SHARED, m_openfd , 0);
     //close(m_openfd);///映射完成后关闭 是否有必要？
-    return last_bs;///最后一个分块是否完整
-}
 
-void Client::Transform(int last_bs){///由上面接收
     char id_buf[INT_SIZE] = {0};
     int n=0;
+
     ///TODO:这里能否在网络环境下快速收到
     for(n=0; n<INT_SIZE; n++){
+        //阻塞读取
         read(m_sockfd, &id_buf[n], 1);
     }
     int freeid = *((int *)id_buf);       /*向任务队列添加任务*/
@@ -52,9 +57,11 @@ void Client::Transform(int last_bs){///由上面接收
             //TODO:将filehead和m_sockfd封装一下 传入sockfd
             struct filehead * p_fhead = create_file_head(m_filename, freeid, &offset);
             args->head=p_fhead;
-            args->sockfd=m_openfd;
+            ///openfd?
+            args->sockfd=m_sockfd;
             ///创建一系列线程跑send_filedata
             if (pthread_create(&pid[j], NULL, send_filedata, (void *)args) != 0){
+                LOG_ERROR(logger)<<"pthread_create failed";
                 printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__, errno, strerror(errno));
                 exit(-1);
             }
@@ -74,7 +81,7 @@ void Client::Transform(int last_bs){///由上面接收
         /*最后一个分块*/
         struct filehead * p_fhead = (struct filehead *)malloc(head_len);
         args->head=p_fhead;
-        args->sockfd=m_openfd;
+        args->sockfd=m_sockfd;
         bzero(p_fhead, head_len);
         strcpy(p_fhead->file_name, m_filename);
         p_fhead->which_con = freeid;
@@ -101,20 +108,24 @@ int Client::createfile(char *filename, int size)
 {
 	int fd = open(filename, O_RDWR | O_CREAT);
 	if(fd!=0){
+        LOG_ERROR(logger)<<"open file:"<<filename<<"failed";
 	    return -1;
 	}
 	//fchmod更改文件权限
 	int ret=fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
 	if(ret!=0){
+        LOG_ERROR(logger)<<"fchmod failed";
 	    return -1;
 	}
 	ret=lseek(fd, size-1, SEEK_SET);///移动文件指针
 	if(ret==-1){
+        LOG_ERROR(logger)<<"lseek failed";
         return  -1;
 	}
 
 	ret=write(fd, "", 1);///TODO:无效操作
 	if(ret==-1){
+        LOG_ERROR(logger)<<"write failed";
 	    return -1;
 	}
 	close(fd);
@@ -213,6 +224,8 @@ void* Client::send_filedata(void *args)
 			fp+=SEND_SIZE;
 		}
 		else{
+            printf("发送结束\n");
+            LOG_INFO(logger)<<"发送完成";
 		}
 	}
 
@@ -239,6 +252,7 @@ void Client::Client_init(char *ip)
     socklen_t sockaddr_len=sizeof(sockaddr_in);
     if (connect(m_sockfd, (struct sockaddr *)&server_addr, sockaddr_len) < 0)
     {
+        LOG_ERROR(logger)<<"connect failed";
         ///已经进行保护 如果这里错误后续就直接退出
         perror("connect");
         exit(-1);

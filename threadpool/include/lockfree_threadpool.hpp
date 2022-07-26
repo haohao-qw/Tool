@@ -10,8 +10,7 @@
 #include <sstream>
 #include "lockfree_queue.hpp"
  
-using namespace std;
- 
+
 template<typename T>
 class ThreadPoolBase {
   public:
@@ -27,7 +26,7 @@ class ThreadPoolBase {
    * @brief 子类必须实现，val是队列中取出的元素，对其进行一系列操作，或是函数执行，或是基础数据进行运算
    * @param val 泛型数据
    */
-  virtual void Handle(const T &val)=0;///纯虚函数 必须实现
+  virtual void Handle( T &val)=0;///纯虚函数 必须实现
  
  public:
    ThreadPoolBase(int size){
@@ -58,7 +57,7 @@ class ThreadPoolBase {
    */
   void Start(){
       for (int i=0; i < m_size; i++) {
-          m_threadpool.push_back( thread(&ThreadPoolBase<T>::Worker, this));
+          m_threadpool.push_back(std::thread(&ThreadPoolBase<T>::Worker, this));
       }
       return;
   }
@@ -101,7 +100,7 @@ class ThreadPoolBase {
   ///无锁队列结构
   CLockFreeQueue<T> m_queue;
   ///容器封装的线程池
-  vector<thread> m_threadpool;
+  std::vector<std::thread> m_threadpool;
 };
 
 

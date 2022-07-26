@@ -86,6 +86,7 @@ thread_pool_t* thread_pool_create(int max_thr_num)
             exit(-1);
         }
     }
+    LOG_INFO(LOG_ROOT())<<"线程初始化成功";
     return threadpool;
 }
 
@@ -157,14 +158,14 @@ int thread_pool_add_work(void*(*routine)(void*), void *arg)
     pthread_mutex_lock(&threadpool->queue_lock);
 	/*任务链表为空*/
     if ( !threadpool->queue_head ) {
-        LOG_INFO(g_logger)<<"任务链表非空";
+        LOG_DEBUG(g_logger)<<"任务链表非空";
 //		printf("first work in work-queue\n");
         threadpool->queue_head = work;
-	threadpool->queue_tail = work;
+	    threadpool->queue_tail = work;
     }
 	/*任务链表非空，查询任务链表末尾*/
 	else {
-        LOG_INFO(g_logger)<<"任务链表为空";
+        LOG_DEBUG(g_logger)<<"任务链表为空";
 //		printf("not first work in work-queue\n");
 		threadpool->queue_tail->next=work;
 		threadpool->queue_tail=work;

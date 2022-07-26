@@ -1,5 +1,5 @@
-#ifndef ASYNC_LOG_H
-#define ASYNC_LOG_H
+#ifndef ASYNC_ASYLOG_H
+#define ASYNC_ASYLOG_H
 #include<unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -17,7 +17,7 @@
 
 using std::string;
 ///致命 错误 警告 初始 调试 跟踪 根据不同的设定输出
-enum LOG_LEVEL{
+enum ASYLOG_LEVEL{
 	FATAL=1,
 	ERROR,
 	WARN,
@@ -163,7 +163,7 @@ void* be_thdo(void* args);
 /***************************************工具宏********************************************/
 
 ///设置m_buflen
-#define LOG_SET_BUFLEN(arg)\
+#define ASYLOG_SET_BUFLEN(arg)\
 	do\
 	{\
 		if(arg<1*1024)arg=1*1024;\
@@ -172,7 +172,7 @@ void* be_thdo(void* args);
 	}while(0)
 
 ///format:[LEVEL][yy-mm-dd h:m:s[tid][file_name]:line (fun_name):content
-#define LOG_INIT(log_dir,prog_name,level)\
+#define ASYLOG_INIT(log_dir,prog_name,level)\
 	do\
 	{\
 		async_log::getinstance()->set_path(log_dir,prog_name,level); \
@@ -183,37 +183,37 @@ void* be_thdo(void* args);
 		}\
 	}while(0)
 
-#define LOG_FATAL(fmt,args...)\
+#define ASYLOG_FATAL(fmt,args...)\
 	do{\
 		async_log::getinstance()->Write("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
-#define LOG_ERROR(fmt,args...)\
+#define ASYLOG_ERROR(fmt,args...)\
 	do{\
 		async_log::getinstance()->Write("[ERROR]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
-#define LOG_WARN(fmt,args...)\
+#define ASYLOG_WARN(fmt,args...)\
 	do{\
 		async_log::getinstance()->Write("[WARN]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
-#define LOG_INFO(fmt,args...)\
+#define ASYLOG_INFO(fmt,args...)\
 	do{\
 		async_log::getinstance()->Write("[INFO]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
-#define LOG_DEBUG(fmt,args...)\
+#define ASYLOG_DEBUG(fmt,args...)\
 	do{\
 		async_log::getinstance()->Write("[DUBUG]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
 	}while(0)
 
-#define LOG_TRACE(fmt,args...)\
+#define ASYLOG_TRACE(fmt,args...)\
 	do{\
 		async_log::getinstance()->Write("[TRACE]","[%u]%s:%d(%s):" fmt "\n",\
 				getuid(),__FILE__,__LINE__,__FUNCTION__,##args);\
