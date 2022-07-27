@@ -7,6 +7,7 @@ include_directories(./include)
 set(LIB_SOUR
 		src/async_log.cc
 		src/syn_log.cc
+		src/async_freeklock_log.cc
 		)
 #add_library(async_log STATIC ${LIB_SOUR})
 add_library(log SHARED ${LIB_SOUR})

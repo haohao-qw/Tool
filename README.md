@@ -59,3 +59,8 @@ Filets的封装测试
 解决freelockqueue和lockfreethreadpool的bug  完成日志线程池文件传输的注释  
 计划：  
 完成剩余的注释，性能测试和规范命名
+
+727:
+完成：  
+无锁版异步日志  
+

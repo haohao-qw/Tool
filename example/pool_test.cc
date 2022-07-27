@@ -14,7 +14,7 @@ class work:public ThreadPoolBase<std::function<void(void)>>{
 		work(int size):ThreadPoolBase(size){};
 
 		///val是队列拿到的值
-		void Handle(const std::function<void(void)>& val){
+		void Handle( std::function<void(void)>& val){
 			val();
 		}
 };
