@@ -12,16 +12,16 @@ Logger::ptr g_logger=LOG_ROOT();
 
 ////独立的加锁线程池
 
-class LockServer;
+class Server;
 
 /**
  * @brief 工作线程参数
  */
 struct args{
     int sockfd;
-    LockServer* server;
-    void (*recv_finfo)(LockServer*,int fd);
-    void (*recv_fdata)(LockServer*,int fd);
+    Server* server;
+    void (*recv_finfo)(Server*,int fd);
+    void (*recv_fdata)(Server*,int fd);
 };
 
 

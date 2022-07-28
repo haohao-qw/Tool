@@ -17,8 +17,7 @@ static void* thread_routine(void *arg)///arg有啥用
         /* 如果任务队列为空,且线程池未关闭，线程阻塞等待任务 */
         pthread_mutex_lock(&threadpool->queue_lock);
 	    ///等待队列中有任务或者线程池关闭
-        //while(!threadpool->queue_head && !threadpool->shutdown) {
-        while(!threadpool->queue_head || !threadpool->shutdown) {//TODO:条件
+        while(!threadpool->queue_head && !threadpool->shutdown) {//TODO:条件
             pthread_cond_wait(&threadpool->queue_ready, &threadpool->queue_lock);
         }
 		/*查看线程池开关，如果线程池关闭，线程退出*/

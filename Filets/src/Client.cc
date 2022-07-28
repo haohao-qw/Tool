@@ -1,4 +1,4 @@
-#include "File_lockclient.hpp"
+#include "Client.hpp"
 #include "File_utils.hpp"
 #include "syn_log.hpp"
 
@@ -72,7 +72,7 @@ void Client::Transform(){
         for(j=0; j<num-1; j++){
             struct filehead * p_fhead = create_file_head(m_filename, freeid, &offset);
             args->head=p_fhead;
-            args->sockfd=m_openfd;
+            args->sockfd=m_sockfd;
             if (pthread_create(&pid[j], NULL, send_filedata, (void *)args) != 0){
                 printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__, errno, strerror(errno));
                 exit(-1);

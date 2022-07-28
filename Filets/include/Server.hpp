@@ -20,7 +20,7 @@
 #include "lock_threadpool.hpp"
 #include "File_utils.hpp"
 
-class LockServer {
+class Server {
 public:
     struct keep_con m_global_con[CONN_MAX];
 
@@ -38,8 +38,8 @@ private:
     pthread_mutex_t conn_lock = PTHREAD_MUTEX_INITIALIZER;
 
 public:
-    LockServer(){};
-    ~LockServer(){};
+    Server(){};
+    ~Server(){};
 
 
     /**
@@ -78,14 +78,14 @@ public:
      * @param server
      * @param sockfd
      */
-    static void recv_fileinfo(LockServer* server,int sockfd);
+    static void recv_fileinfo(Server* server,int sockfd);
 
     /**
      * @brief 接收文件块
      * @param server
      * @param sockfd
      */
-    static void recv_filedata(LockServer* server,int sockfd);
+    static void recv_filedata(Server* server,int sockfd);
 
     /**
      * @brief 线程函数

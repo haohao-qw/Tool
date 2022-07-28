@@ -1,43 +1,61 @@
-#include "File_lockfreeserver.hpp"
+#include "Server.hpp"
+#include "lock_threadpool.hpp"
 
 //*
-void LockFreeServer::Init(){
-    //开启线程池
-    m_threadpool->Start();
+void Server::Init(){
+    /*创建线程池*/
+    if (thread_pool_create(THREAD_NUM) == nullptr) {
+        printf("tpool_create failed\n");
+        LOG_INFO(LOG_ROOT())<<"tpool create failed";
+        exit(-1);
+    }
+    printf("--- Thread Pool Strat ---\n");
     /*初始化server，监听请求*/
     m_listenfd = Server_init(PORT);
-    socklen_t sockaddr_len = sizeof(struct sockaddr);
 
     /*epoll*/
     m_epfd = epoll_create(EPOLL_SIZE);
-    m_ev.events = EPOLLIN;
+    m_ev.events = EPOLLIN|EPOLLOUT;
     m_ev.data.fd = m_listenfd;
     epoll_ctl(m_epfd, EPOLL_CTL_ADD, m_listenfd, &m_ev);
 }
 
 
 //*
-void LockFreeServer::RecvTransfrom() {
-    while (1) {
+void Server::RecvTransfrom(){
+    while(1){
         int events_count = epoll_wait(m_epfd, m_events, EPOLL_SIZE, -1);
-        int i = 0;
+        int i=0;
+
         /*接受连接，添加work到work-Queue*/
-        for (; i < events_count; i++) {
-            if (m_events[i].data.fd == m_listenfd) {
+        for(; i<events_count; i++){
+            if(m_events[i].data.fd == m_listenfd)
+            {
                 int connfd;
-                struct sockaddr_in clientaddr;
+                struct sockaddr_in  clientaddr;
                 socklen_t sockaddr_len = sizeof(struct sockaddr);
-                while ((connfd = ::accept(m_listenfd, (struct sockaddr *) &clientaddr, &sockaddr_len)) > 0) {
-                    //线程分发
-                    std::function<void(void)>Task=std::bind(&LockFreeServer::worker,this,connfd);
-                    m_threadpool->Push(Task);//装进队列
+                while( ( connfd = ::accept(m_listenfd, (struct sockaddr *)&clientaddr, &sockaddr_len) ) > 0 )
+                {
+                    ///进行线程分发 也就是将任务丢到任务队列中
+                    printf("EPOLL: Received New Connection Request---connfd= %d\n",connfd);
+                    struct args *p_args = (struct args *)malloc(sizeof(struct args));
+                    p_args->sockfd = connfd;
+                    p_args->recv_finfo = recv_fileinfo;
+                    p_args->recv_fdata = recv_filedata;
+                    p_args->server=this;
+                    /*添加work到work-Queue*/
+                    //worker：绑定的线程函数
+                    thread_pool_add_work(worker, (void*)p_args);
+                    printf("线程分发成功\n");
+                    LOG_INFO(LOG_ROOT())<<"线程分发成功";
                 }
             }
         }
     }
-
 }
-int LockFreeServer::createfile(char *filename, int size)
+
+
+int Server::createfile(char *filename, int size)
 {
 	int fd = open(filename, O_RDWR | O_CREAT);
 	fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
@@ -48,9 +66,51 @@ int LockFreeServer::createfile(char *filename, int size)
 }
 
 //*
+/*工作线程，分析type，选择工种*/
+void* Server::worker(void *argc)
+{
+    //接受到客户端请求解除阻塞
+    struct args *pw = (struct args *)argc;///args传递参数
+    int conn_fd = pw->sockfd;
+
+    char type_buf[INT_SIZE] = {0};
+    char *p=type_buf;
+    int recv_size=0;
+    while(1){
+        if( recv(conn_fd, p, 1, 0) == 1 ){
+            ++recv_size;
+            if(recv_size == INT_SIZE)
+                break;
+            ++p;
+        }
+    }
+
+    int type=*((int*)type_buf);///转为int类型
+    printf("type:%d\n",type);
+    switch (type){
+        /*接收文件信息*/
+	    ///0接收文件信息   255接受文件块
+        case 0:
+            printf("## worker ##\nCase %d: the work is recv file-info\n", type);
+	    ///调用会回调 也就是传入参数中绑定的回调
+            pw->recv_finfo(pw->server,conn_fd);
+            break;
+        /*接收文件块*/
+        case 255:
+            printf("## worker ##\nCase %d: the work is recv file-data\n", type);
+            pw->recv_fdata(pw->server,conn_fd);
+          break;
+        default:
+            printf("unknown type!");
+            return NULL;
+    }
+    return NULL;
+}
+
+//*
 /*接收文件信息，添加连接到gobal_con[]数组，创建填充文件，map到内存*/
 ///只调用一次 也就是只完成一次文件的创建 共享内存的映射
-void LockFreeServer::recv_fileinfo(int sockfd)
+void Server::recv_fileinfo(Server*server,int sockfd)
 {
      /*接收文件信息*/
     char fileinfo_buf[100] = {0};
@@ -72,7 +132,7 @@ void LockFreeServer::recv_fileinfo(int sockfd)
     /*创建填充文件，map到虚存*/
     char filepath[100] = {0};
     strcpy(filepath, finfo.file_name);
-    createfile(filepath, finfo.file_size);
+    server->createfile(filepath, finfo.file_size);
     int fd=0;
     if((fd = open(filepath, O_RDWR)) == -1 )
     {
@@ -86,34 +146,34 @@ void LockFreeServer::recv_fileinfo(int sockfd)
     close(fd);
 
     /*向gconn[]中添加连接*/
-    pthread_mutex_lock(&conn_lock);
+    pthread_mutex_lock(&server->conn_lock);
 
     printf("recv_fileinfo(): Lock conn_lock, enter gconn[]\n");
     ///拿到维护的全局可用连接
-    while(m_global_con[freeid].used ){
-        ++freeid;
-        freeid = freeid%CONN_MAX;
+    while(server->m_global_con[server->freeid].used ){
+        ++server->freeid;
+        server->freeid = server->freeid%CONN_MAX;
     }
 
     ///初始化一个连接 后续请求通过这个连接练习服务端文件信息和接收到的文件信息
-    bzero(&m_global_con[freeid].file_name, FILENAME_MAXLEN);
-    m_global_con[freeid].sockfd = sockfd;
-    strcpy(m_global_con[freeid].file_name, finfo.file_name);
-    m_global_con[freeid].file_size = finfo.file_size;
-    m_global_con[freeid].chunk_num = finfo.chunk_num;
-    m_global_con[freeid].chunk_size = finfo.chunk_size;
-    m_global_con[freeid].mbegin = map;
-    m_global_con[freeid].recv_count = 0;
-    m_global_con[freeid].used = 1;
+    bzero(&server->m_global_con[server->freeid].file_name, FILENAME_MAXLEN);
+    server->m_global_con[server->freeid].sockfd = sockfd;
+    strcpy(server->m_global_con[server->freeid].file_name, finfo.file_name);
+    server->m_global_con[server->freeid].file_size = finfo.file_size;
+    server->m_global_con[server->freeid].chunk_num = finfo.chunk_num;
+    server->m_global_con[server->freeid].chunk_size = finfo.chunk_size;
+    server->m_global_con[server->freeid].mbegin = map;
+    server->m_global_con[server->freeid].recv_count = 0;
+    server->m_global_con[server->freeid].used = 1;
 
-    pthread_mutex_unlock(&conn_lock);
+    pthread_mutex_unlock(&server->conn_lock);
 
     printf("recv_fileinfo(): Unock conn_lock, exit gconn[]\n");
 
     /*向client发送分配的freeid（gconn[]数组下标），作为确认，每个分块都将携带id*/
     ///确认为0：todo提供更多的交互
     char freeid_buf[INT_SIZE]={0};
-    memcpy(freeid_buf, &freeid, INT_SIZE);
+    memcpy(freeid_buf, &server->freeid, INT_SIZE);
     ///回复的内容：指明分配的id
     send(sockfd, freeid_buf, INT_SIZE, 0);
     printf("freeid = %d\n", *(int *)freeid_buf);
@@ -124,7 +184,7 @@ void LockFreeServer::recv_fileinfo(int sockfd)
 //*
 /*接收文件块*/
 ///是在接收文件信息之后 也就是创建了该文件以及创建了共享内存 之后操作创建的文件以及共享内存
-void LockFreeServer::recv_filedata(int sockfd)
+void Server::recv_filedata(Server* server,int sockfd)
 {
    // set_fd_noblock(sockfd);
     /*读取分块头部信息*/
@@ -147,7 +207,7 @@ void LockFreeServer::recv_filedata(int sockfd)
      /*计算本块在map中起始地址fp*/ 
     ///逻辑：根据id拿到全局接收的连接 通过该连接进行收发信息
     int recv_offset = file_head.file_offset;
-    char *fp = m_global_con[recv_id].mbegin+recv_offset;
+    char *fp = server->m_global_con[recv_id].mbegin+recv_offset;
 
     printf("------- blockhead -------\n");
     printf("filename = %s\nThe filedata id = %d\noffset=%d\nchunk_size = %d\nstart addr= %p\n", file_head.file_name, file_head.which_con, file_head.file_offset, file_head.chunk_size, fp);
@@ -168,95 +228,64 @@ void LockFreeServer::recv_filedata(int sockfd)
     printf("----------------- Recv a fileblock ----------------- \n");
 
     /*增加recv_count，判断是否是最后一个分块，如果是最后一个分块，同步map与文件，释放gconn*/
-    pthread_mutex_lock(&conn_lock);
-    m_global_con[recv_id].recv_count++;
-    if(m_global_con[recv_id].recv_count == m_global_con[recv_id].chunk_num){
+    pthread_mutex_lock(&server->conn_lock);
+    server->m_global_con[recv_id].recv_count++;
+    if(server->m_global_con[recv_id].recv_count == server->m_global_con[recv_id].chunk_num){
 	    ///同步map和文件?
-        munmap((void *)m_global_con[recv_id].mbegin, m_global_con[recv_id].file_size);
+        munmap((void *)server->m_global_con[recv_id].mbegin, server->m_global_con[recv_id].file_size);
 
         printf("-----------------  Recv a File ----------------- \n ");
 
-        int fd = m_global_con[recv_id].sockfd;
+        int fd = server->m_global_con[recv_id].sockfd;
         close(fd);
-	    bzero(&m_global_con[recv_id], conn_len);
+	    bzero(&server->m_global_con[recv_id], conn_len);
     }
-    pthread_mutex_unlock(&conn_lock);
+    pthread_mutex_unlock(&server->conn_lock);
 
     close(sockfd);
     return;
 }
 
 /*初始化Server，监听Client*/
-int LockFreeServer::Server_init(int port)
+int Server::Server_init(int port)
 {
     int listen_fd;
     struct sockaddr_in server_addr;
     if((listen_fd = socket(AF_INET, SOCK_STREAM, 0))== -1)
     {
+        LOG_INFO(LOG_ROOT())<<"socket init failed";
         fprintf(stderr, "Creating server socket failed.");
         exit(-1);
     }
     set_fd_noblock(listen_fd);
+    int on=1;
+    int ret= setsockopt(listen_fd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
     socklen_t sockaddr_len=sizeof (sockaddr);
     bzero(&server_addr, sockaddr_len);
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    const int on=1;
-    setsockopt(listen_fd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
-
     if(bind(listen_fd, (struct sockaddr *) &server_addr, sockaddr_len) == -1)
     {
+        LOG_INFO(LOG_ROOT())<<"Server bind failed";
         fprintf(stderr, "Server bind failed.");
         exit(-1);
     }
 
     if(listen(listen_fd, LISTEN_QUEUE_LEN) == -1)
     {
+        LOG_INFO(LOG_ROOT())<<"Server listen failed";
         fprintf(stderr, "Server listen failed.");
         exit(-1);
     }
     return listen_fd;
 }
 
-void LockFreeServer::set_fd_noblock(int fd)
+void Server::set_fd_noblock(int fd)
 {
     int flag=fcntl(fd, F_GETFL, 0);
 	fcntl(fd, F_SETFL, flag | O_NONBLOCK);
 	return;
-}
-
-void LockFreeServer::worker(int confd) {
-    //接受到客户端请求解除阻塞
-    char type_buf[INT_SIZE] = {0};
-    char *p=type_buf;
-    int recv_size=0;
-    while(1){
-        if( recv(confd, p, 1, 0) == 1 ){
-            ++recv_size;
-            if(recv_size == INT_SIZE)
-                break;
-            ++p;
-        }
-    }
-
-    int type=*((int*)type_buf);///转为int类型
-    switch (type){
-        /*接收文件信息*/
-        ///0接收文件信息   255接受文件块
-        case 0:
-            printf("## worker ##\nCase %d: the work is recv file-info\n", type);
-            ///调用会回调 也就是传入参数中绑定的回调
-            recv_fileinfo(confd);
-            break;
-            /*接收文件块*/
-        case 255:
-            printf("## worker ##\nCase %d: the work is recv file-data\n", type);
-            recv_filedata(confd);
-            break;
-        default:
-            printf("unknown type!");
-    }
 }
 

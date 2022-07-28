@@ -71,6 +71,9 @@ target_link_libraries(Client ${LIBLIST})
 add_executable(syn_log example/syn_logs.cc)
 target_link_libraries(syn_log ${LIBLIST})
 
+add_executable(async_freelock_log example/ex_async_freelock_log.cc)
+target_link_libraries(async_freelock_log ${LIBLIST})
+
 
 
 
