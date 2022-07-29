@@ -240,6 +240,7 @@ void Server::recv_filedata(Server* server,int sockfd)
         close(fd);
 	    bzero(&server->m_global_con[recv_id], conn_len);
     }
+	///TODO:是否需要对于非最后以一块数据进行一次映射接收
     pthread_mutex_unlock(&server->conn_lock);
 
     close(sockfd);
