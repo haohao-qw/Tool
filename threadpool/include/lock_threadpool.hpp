@@ -9,19 +9,13 @@
 
 Logger::ptr g_logger=LOG_ROOT();
 
-
-////独立的加锁线程池
-
-class Server;
-
 /**
  * @brief 工作线程参数
  */
 struct args{
     int sockfd;
-    Server* server;
-    void (*recv_finfo)(Server*,int fd);
-    void (*recv_fdata)(Server*,int fd);
+    void (*recv_finfo)(int fd);
+    void (*recv_fdata)(int fd);
 };
 
 
@@ -77,6 +71,5 @@ void thread_pool_destroy();
  * @return    0: 成功 其他:失败
  */
 int thread_pool_add_work(void*(*routine)(void*), void *arg);
-
 #endif
 

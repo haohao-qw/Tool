@@ -112,7 +112,10 @@ struct keep_con{
     char *mbegin;                     //mmap起始地址
     char file_name[FILENAME_MAXLEN];   //文件名
 };
-#define  fileinfo_len  sizeof(struct fileinfo)
-#define  head_len      sizeof(struct filehead)
+
+
+#define  fileinfo_len   sizeof(struct fileinfo)
+#define  head_len       sizeof(struct filehead)
 #define  conn_len       sizeof(struct keep_con)
+
 #endif
