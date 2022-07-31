@@ -2,16 +2,10 @@
 #include "File_utils.hpp"
 #include "syn_log.hpp"
 
-/*信息交换sockfd*/
-int info_fd;
-///写client时定义
-extern char *mbegin;
-extern int port;
-
 /*结构体长度*/
 socklen_t sockaddr_len = sizeof(struct sockaddr);
 
-int createfile(char *filename, int size)
+int Client::createfile(char *filename, int size)
 {
     int fd = open(filename, O_RDWR | O_CREAT);
     fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
@@ -23,7 +17,7 @@ int createfile(char *filename, int size)
 
 
 //创建文件头部信息
-struct filehead * create_file_head(char *filename, int conid, int *offset)
+struct filehead * Client::create_file_head(char *filename, int conid, int *offset,char* begin)
 {
 
     struct filehead* file_head = (filehead*)malloc(head_len);
@@ -32,13 +26,14 @@ struct filehead * create_file_head(char *filename, int conid, int *offset)
     file_head->which_con = conid;
     file_head->file_offset = *offset;
     file_head->chunk_size = BLOCKSIZE;
+    file_head->begin=begin;
     *offset += BLOCKSIZE;
     return file_head;
 }
 
 
 //发送文件信息
-void send_fileinfo(int sock_fd, char *fname, struct stat* p_fstat, struct fileinfo *file_info, int *p_last_bs)
+void Client::send_fileinfo(int sock_fd, char *fname, struct stat* p_fstat, struct fileinfo *file_info, int *p_last_bs)
 {
     /*初始化fileinfo*/
     bzero(file_info, fileinfo_len);
@@ -70,12 +65,9 @@ void send_fileinfo(int sock_fd, char *fname, struct stat* p_fstat, struct filein
     return;
 }
 
-void recv_fileinfo(int sockfd){
-    ///todo：进行交互反馈
-}
 
 //发送文件数据 作为回调使用 args传filehead结构体
-void * send_filedata(void *args)
+void * Client::send_filedata(void *args)
 {
     struct filehead * file_head = (struct filehead *)args;
     printf("------- blockhead -------\n");
@@ -108,7 +100,7 @@ void * send_filedata(void *args)
     printf("Thread : send filedata\n");
     int i=0, send_size=0, num=file_head->chunk_size/SEND_SIZE;
     //todo:这里没对多余数据进行处理 改进：对于多于数据最后发送
-    char *fp=mbegin+file_head->file_offset;///拿到偏移
+    char *fp=file_head->begin+file_head->file_offset;///拿到偏移
     for(i=0; i<num; i++){
         if( (send_size = send(sock_fd, fp, SEND_SIZE, 0)) == SEND_SIZE){
             fp+=SEND_SIZE;
@@ -126,7 +118,7 @@ void * send_filedata(void *args)
 }
 
 
-int Client_init(char *ip)
+int Client::Client_init(char *ip)
 {
     //创建socket
     int sock_fd = socket(AF_INET,SOCK_STREAM, 0);
@@ -135,7 +127,7 @@ int Client_init(char *ip)
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(port);
+    server_addr.sin_port = htons(PORT);
     server_addr.sin_addr.s_addr = inet_addr(ip);
 
     //连接服务器
@@ -148,7 +140,7 @@ int Client_init(char *ip)
 }
 
 
-void set_fd_noblock(int fd)
+void Client::set_fd_noblock(int fd)
 {
     int flag=fcntl(fd, F_GETFL, 0);
     fcntl(fd, F_SETFL, flag | O_NONBLOCK);

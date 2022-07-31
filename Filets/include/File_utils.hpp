@@ -93,6 +93,8 @@ struct fileinfo{
 
 /*分块头部信息*/
 struct filehead{
+    int sockfd;                     ///客户端发送的sockfd   对于服务端是无用的
+    char* begin;                       ///客户端发送时知道的偏移 对于服务端是无用的
     int which_con;                             //分块所属文件的id，gconn[CONN_MAX]数组的下标
     int file_offset;                //分块在原文件中偏移
     int chunk_size;         //本文件块实际大小 正常情况和fileinfo中一致 最后一个可能不同

@@ -5,8 +5,56 @@ int freeid = 0;
 struct keep_con global_con[CONN_MAX];
 pthread_mutex_t conn_lock = PTHREAD_MUTEX_INITIALIZER;
 
+/*结构体长度*/
+void Server::Init(){
+    /*创建线程池*/
+    if (thread_pool_create(THREAD_NUM) ==NULL) {
+        printf("tpool_create failed\n");
+        exit(-1);
+    }
+    printf("--- Thread Pool Strat ---\n");
+    /*初始化server，监听请求*/
+    m_listenfd = Server_init(PORT);
+}
 
-int createfile(char *filename, int size)
+void Server::Run(){
+    socklen_t sockaddr_len = sizeof(struct sockaddr);
+    /*epoll*/
+    static struct epoll_event ev, events[EPOLL_SIZE];
+    int epfd = epoll_create(EPOLL_SIZE);
+    ev.events = EPOLLIN;
+    ev.data.fd = m_listenfd;
+    epoll_ctl(epfd, EPOLL_CTL_ADD, m_listenfd, &ev);
+    while(1){
+        int events_count = epoll_wait(epfd, events, EPOLL_SIZE, -1);
+        int i=0;
+
+        /*接受连接，添加work到work-Queue*/
+        for(; i<events_count; i++){
+            if(events[i].data.fd == m_listenfd)
+            {
+                int connfd;
+                struct sockaddr_in  clientaddr;
+                while( ( connfd = accept(m_listenfd, (struct sockaddr *)&clientaddr, &sockaddr_len) ) > 0 )
+                {
+                    ///进行线程分发 也就是将任务丢到任务队列中
+                    printf("EPOLL: Received New Connection Request---connfd= %d\n",connfd);
+                    struct args *p_args = (struct args *)malloc(sizeof(struct args));
+                    p_args->sockfd = connfd;
+                    p_args->recv_finfo = recv_fileinfo;
+                    p_args->recv_fdata = recv_filedata;
+                    /*添加work到work-Queue*/
+                    //worker：绑定的线程函数
+                    thread_pool_add_work(worker, (void*)p_args);
+                }
+            }
+        }
+    }
+
+}
+
+
+int Server::createfile(char *filename, int size)
 {
     int fd = open(filename, O_RDWR | O_CREAT);
     fchmod(fd, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
@@ -17,7 +65,7 @@ int createfile(char *filename, int size)
 }
 
 /*工作线程，分析type，选择工种*/
-void * worker(void *argc)
+void * Server::worker(void *argc)
 {
     //接受到客户端请求解除阻塞
     struct args *pw = (struct args *)argc;///args传递参数
@@ -59,7 +107,7 @@ void * worker(void *argc)
 
 /*接收文件信息，添加连接到gobal_con[]数组，创建填充文件，map到内存*/
 ///只调用一次 也就是只完成一次文件的创建 共享内存的映射
-void recv_fileinfo(int sockfd)
+void Server::recv_fileinfo(int sockfd)
 {
     /*接收文件信息*/
     char fileinfo_buf[100] = {0};
@@ -128,7 +176,7 @@ void recv_fileinfo(int sockfd)
 
 /*接收文件块*/
 ///是在接收文件信息之后 也就是创建了该文件以及创建了共享内存 之后操作创建的文件以及共享内存
-void recv_filedata(int sockfd)
+void Server::recv_filedata(int sockfd)
 {
     // set_fd_noblock(sockfd);
 
@@ -192,7 +240,7 @@ void recv_filedata(int sockfd)
 }
 
 /*初始化Server，监听Client*/
-int Server_init(int port)
+int Server::Server_init(int port)
 {
     int listen_fd;
     struct sockaddr_in server_addr;
@@ -202,13 +250,16 @@ int Server_init(int port)
         exit(-1);
     }
     set_fd_noblock(listen_fd);
-    socklen_t sockaddr_len=sizeof(sockaddr_in);
-    bzero(&server_addr, sockaddr_len);
+    int on=1;
+    setsockopt(listen_fd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
+
+    socklen_t sockaddrlen = sizeof(struct sockaddr);
+    bzero(&server_addr, sockaddrlen);
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if(bind(listen_fd, (struct sockaddr *) &server_addr, sockaddr_len) == -1)
+    if(bind(listen_fd, (struct sockaddr *) &server_addr, sockaddrlen) == -1)
     {
         fprintf(stderr, "Server bind failed.");
         exit(-1);
@@ -222,9 +273,10 @@ int Server_init(int port)
     return listen_fd;
 }
 
-void set_fd_noblock(int fd)
+void Server::set_fd_noblock(int fd)
 {
     int flag=fcntl(fd, F_GETFL, 0);
     fcntl(fd, F_SETFL, flag | O_NONBLOCK);
     return;
 }
+
